@@ -1,0 +1,255 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TIB Academy Interactive Learning</title>
+<style>
+:root{--navy:#122a4a;--maroon:#7a263a;--teal:#176b70;--bg:#f3f6f9;--line:#d9e2ea;--muted:#64748b;--good:#21844a}
+*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:#172230}
+header{height:64px;background:var(--navy);color:#fff;display:flex;align-items:center;padding:0 18px;gap:16px}header .brand{font-weight:900}header small{opacity:.7}.spacer{flex:1}
+.adminLink{color:#fff;text-decoration:none;border:1px solid #ffffff55;padding:8px 10px;border-radius:8px;font-size:12px}
+.layout{display:grid;grid-template-columns:220px minmax(0,1fr) 220px;min-height:calc(100vh - 64px)}
+.side{background:#fff;padding:16px;border-right:1px solid var(--line)}.right{border-right:0;border-left:1px solid var(--line)}
+.side h4{font-size:11px;letter-spacing:1px;color:var(--muted);margin:4px 0 12px}
+.map button{display:block;width:100%;text-align:left;border:0;background:transparent;padding:10px;border-radius:8px;margin:2px 0;cursor:pointer;color:#475569}
+.map button.active{background:#eaf2fb;color:var(--navy);font-weight:900}.map button.done{color:var(--good)}
+main{padding:22px;min-width:0}.crumb{font-size:12px;color:var(--muted);margin-bottom:8px}h1{color:var(--navy);margin:0 0 5px}
+.progress{margin:14px 0}.bar{height:7px;background:#e5ebf0;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;background:var(--teal)}
+.stages{display:flex;gap:7px;overflow:auto;margin:18px 0}.stage{white-space:nowrap;border:1px solid var(--line);border-radius:20px;padding:8px 11px;font-size:12px;font-weight:800;background:#fff;cursor:pointer}.stage.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px}.kicker{font-size:11px;letter-spacing:1px;font-weight:900;color:var(--maroon)}h2{color:var(--navy);margin:6px 0 10px}.body{font-size:16px;line-height:1.7}
+.docs{display:grid;gap:8px;margin-top:12px}.doc{border:1px solid var(--line);border-radius:9px;padding:10px;background:#fafcfd}
+.flow{margin-top:16px;background:#eef6f6;border-radius:9px;padding:12px;font-weight:800;color:#155e63}
+.audio{margin-top:14px;padding:13px;background:#f8fafc;border:1px solid var(--line);border-radius:10px}.btn{border:0;background:var(--navy);color:#fff;border-radius:8px;padding:10px 13px;font-weight:800;cursor:pointer}.btn.maroon{background:var(--maroon)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mini{border:1px solid var(--line);border-radius:10px;padding:13px;background:#fafcfd}
+textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;padding:8px;font:inherit}
+.next{margin-top:14px;padding:14px;border-left:4px solid var(--maroon);background:#faf7f8}
+.right .stat{font-size:28px;font-weight:900;color:var(--navy)}.muted{color:var(--muted);font-size:13px}
+.mobileBtns{display:none}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.side{display:none}.mobileBtns{display:flex;gap:7px}.grid2{grid-template-columns:1fr}main{padding:14px}}
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+#authGate{position:fixed;inset:0;background:#eef2f6;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.authCard{width:min(430px,100%);background:#fff;border:1px solid #d9e2ea;border-radius:16px;padding:24px;box-shadow:0 15px 40px #0002}
+.authCard h2{margin-top:0;color:#122a4a}.authCard input{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:8px;margin:5px 0 10px}
+.authMsg{font-size:13px;color:#7a263a;margin-top:10px}.userChip{font-size:12px;background:#ffffff18;padding:7px 9px;border-radius:8px}
+
+.viewer{position:fixed;inset:0;z-index:120;background:#eef2f6;display:none;flex-direction:column}
+.viewerHead{height:58px;background:#122a4a;color:#fff;display:flex;align-items:center;gap:10px;padding:0 14px}
+.viewerHead b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.viewerHead .spacer{flex:1}
+.viewerBody{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr)}
+.viewerFrame{width:100%;height:100%;border:0;background:#fff}
+.viewerFallback{padding:24px;overflow:auto;background:#fff;height:100%}
+.viewerFallback .fileCard{max-width:900px;margin:auto;border:1px solid #d9e2ea;border-radius:14px;padding:22px}
+.viewerActions{display:flex;gap:7px;flex-wrap:wrap}
+.viewerBtn{border:1px solid #ffffff55;background:#ffffff12;color:#fff;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:700}
+.wideHint{font-size:12px;color:#64748b;margin-top:10px}
+@media(max-width:700px){.viewerHead{height:auto;min-height:58px;flex-wrap:wrap;padding:9px}.viewerActions{width:100%;padding-bottom:4px}}
+
+.assessBox{margin-top:16px;border-top:1px solid var(--line);padding-top:16px}
+.answerSaved{font-size:12px;color:var(--good);font-weight:800;margin-top:5px}
+.submissionCard{border:1px solid var(--line);background:#fafcfd;border-radius:10px;padding:12px;margin-top:10px}
+.scoreBadge{display:inline-block;padding:5px 8px;border-radius:12px;background:#eaf2fb;color:var(--navy);font-weight:900;font-size:12px}
+
+.releaseTag{font-size:11px;font-weight:900;letter-spacing:.08em;opacity:.75}
+.notice{border:1px solid #f0d58a;background:#fff9e8;border-radius:10px;padding:10px 12px;margin:10px 0}
+@media(max-width:980px){.layout{grid-template-columns:1fr!important}.left,.right{display:none}.main{min-width:0}}
+</style></head>
+<body>
+<header><div><div class="brand">TIB ACADEMY</div><small>INTERACTIVE LEARNING</small></div><div class="spacer"></div><span class="userChip" id="userChip">Not signed in</span><a class="adminLink" href="content-admin.html">Content Admin</a><a class="adminLink" href="#" onclick="sb.auth.signOut();location.reload();return false">Sign Out</a></header>
+<div class="viewer" id="viewer">
+ <div class="viewerHead"><b id="viewerTitle">Document Viewer</b><div class="spacer"></div>
+ <div class="viewerActions"><button class="viewerBtn" onclick="openViewerExternal()">Open Original</button><button class="viewerBtn" onclick="viewerFullscreen()">Full Screen</button><button class="viewerBtn" onclick="closeViewer()">Close</button></div></div>
+ <div class="viewerBody" id="viewerBody"></div>
+</div><div id="authGate">
+<div class="authCard">
+<div class="kicker">TIB ACADEMY</div><h2>Interactive Learning Sign In</h2>
+<p class="muted">Use your existing TIB Academy trainee account.</p>
+<label>Email</label><input type="email" id="loginEmail" autocomplete="email">
+<label>Password</label><input type="password" id="loginPassword" autocomplete="current-password">
+<button class="btn" onclick="signIn()">Sign In</button>
+<div class="authMsg" id="authMsg"></div>
+</div></div><div class="layout">
+<aside class="side"><h4>PROJECT MAP</h4><div class="map" id="map"></div></aside>
+<main>
+ <div class="crumb" id="crumb"></div><h1 id="activityTitle"></h1><div class="muted" id="projectStage"></div>
+ <div class="progress"><div class="bar"><i id="bar"></i></div><small class="muted" id="progressText"></small></div>
+ <div class="stages" id="stages"></div>
+ <section class="card" id="content"></section>
+</main>
+<aside class="side right"><h4>MY COURSE</h4><b>PM → Controls Lead</b><p class="muted">Interactive project simulation</p><div class="stat" id="pct">0%</div><p class="muted">Current activity</p><b id="current"></b><hr style="border:0;border-top:1px solid var(--line);margin:16px 0"><b>Batch 8</b><p class="muted">Dynamic Course Player. One six-stage engine now loads each project activity from the reusable content model.</p></aside>
+</div>
+<script>
+const SUPABASE_URL='https://blfgwysgekfqhcafofhe.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_ThLetpd4hj49fjce-kXoFA_v4ghwIqV';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const ENROLLMENT_COURSE='TIB-PM-CONTROLS-LEAD';
+const APP_COURSE_ID='pm_to_controls_lead';
+const MATERIALS_BUCKET='academy-materials';
+const SUBMISSIONS_BUCKET='academy-submissions';
+let currentUser=null,data,ai=0,si=0;const stageNames=['SEE','LISTEN','OBSERVE','BUILD','COMPARE','CONNECT'];
+async function init(){
+ data=await fetch('course-content.json').then(r=>r.json());
+ window.activityMaterialMap=await fetch('activity-material-map.json').then(r=>r.json()).catch(()=>({activity_mapping:{}}));
+ window.audioManifest=await fetch('audio-manifest.json').then(r=>r.json()).catch(()=>({activities:{}}));
+ const {data:{session}}=await sb.auth.getSession();
+ if(session){await enterAcademy(session.user)}
+}
+async function signIn(){
+ authMsg.textContent='Signing in…';
+ const email=loginEmail.value.trim(),password=loginPassword.value;
+ const {data:login,error}=await sb.auth.signInWithPassword({email,password});
+ if(error){authMsg.textContent=error.message;return}
+ await enterAcademy(login.user);
+}
+async function enterAcademy(user){
+ currentUser=user;userChip.textContent=user.email||'Signed in';
+ const {data:enroll,error}=await sb.from('enrollments').select('course,is_active,start_date,expiry_date').eq('user_id',user.id).eq('course',ENROLLMENT_COURSE).eq('is_active',true).maybeSingle();
+ if(error){authMsg.textContent='Unable to verify course access.';return}
+ if(!enroll){authMsg.textContent='Your account is valid, but PM → Controls Lead is not currently assigned to this account.';return}
+ authGate.style.display='none';
+ const {data:rows}=await sb.from('academy_progress').select('item_id,status,progress_percent,data').eq('user_id',user.id).eq('app_course_id',APP_COURSE_ID);
+ window.remoteProgress=rows||[];
+ const resume=(rows||[]).filter(x=>x.data&&x.data.current_project_stage).sort((a,b)=>new Date(b.updated_at)-new Date(a.updated_at))[0];
+ if(resume){const idx=data.activities.findIndex(x=>x.id===resume.item_id);if(idx>=0){ai=idx;localStorage.setItem('tib_ila_activity',String(ai));}}
+ const {data:mats}=await sb.from('academy_materials').select('id,item_id,category,title,filename,storage_path,material_type,sort_order').eq('app_course_id',APP_COURSE_ID).eq('audience','trainee').eq('is_active',true).order('sort_order');
+ window.courseMaterials=mats||[];
+ const {data:subs}=await sb.from('academy_submissions').select('id,item_id,original_filename,status,score,reviewer_comments,submitted_at').eq('user_id',user.id).eq('app_course_id',APP_COURSE_ID).order('submitted_at',{ascending:false});
+ window.mySubmissions=subs||[];
+ let saved=(rows||[]).find(x=>x.data&&x.data.current_project_stage);
+ if(saved){let x=data.activities.findIndex(a=>a.projectStage===saved.data.current_project_stage);if(x>=0)ai=x}
+ if(!(window.remoteProgress||[]).length){const savedAi=Number(localStorage.getItem('tib_ila_activity'));if(Number.isInteger(savedAi)&&savedAi>=0&&savedAi<data.activities.length)ai=savedAi;}
+ render();
+}
+async function saveRemoteProgress(item,status,percent,extra={}){
+ if(!currentUser)return;
+ await sb.from('academy_progress').upsert({user_id:currentUser.id,app_course_id:APP_COURSE_ID,item_id:item,status,progress_percent:percent,data:extra,updated_at:new Date().toISOString()},{onConflict:'user_id,app_course_id,item_id'});
+}
+function render(){
+ const a=data.activities[ai], pct=Math.round((ai/data.activities.length)*100);
+ activityTitle.textContent=a.title;projectStage.textContent=a.projectStage;crumb.textContent='My Courses / '+data.course.title+' / '+a.projectStage;
+ current.textContent=a.projectStage+' · '+stageNames[si];document.getElementById('pct').textContent=pct+'%';bar.style.width=pct+'%';progressText.textContent='Course progress · '+pct+'%';
+ map.innerHTML='';data.activities.forEach((x,i)=>{let b=document.createElement('button');b.textContent=(i<ai?'✓ ':'')+x.projectStage;b.className=i===ai?'active':(i<ai?'done':'');b.onclick=()=>{ai=i;si=0;render()};map.appendChild(b)});
+ stages.innerHTML='';stageNames.forEach((x,i)=>{let b=document.createElement('button');b.className='stage '+(i===si?'active':'');b.textContent=x;b.onclick=()=>{si=i;render()};stages.appendChild(b)});
+ renderStage(a);
+}
+function missing(a,what){return `<div class="kicker">${stageNames[si]}</div><h2>${a.projectStage}</h2><p class="body">This activity is ready in the reusable learning engine. ${what} has not yet been populated in the course-content model.</p><div class="flow">Content Admin → add approved content → the trainee player loads it here automatically.</div>`}
+function renderStage(a){
+ if(si===0){
+ let pref=((window.activityMaterialMap.activity_mapping||{})[a.id]||{}).preferred||[];
+ let selected=(window.courseMaterials||[]).map((m,i)=>({...m,_idx:i})).filter(m=>pref.includes(m.title));
+ let real=selected.map(m=>`<div class="doc"><b>${m.title}</b><br><span class="muted">${m.category} · ${m.material_type}</span> <button class="btn" style="float:right;padding:6px 9px" onclick="openMaterial(${m._idx})">Open</button></div>`).join('');
+ content.innerHTML=`<div class="kicker">SEE · FINISHED PRODUCT</div><h2>${a.title}</h2><p class="body">Before doing the work, see the finished work product and understand where it fits in the controls project.</p><div class="flow">${data.course.projectMap.join(' → ')}</div><h3 style="color:var(--navy);margin-top:20px">Materials for This Project Activity</h3><div class="docs">${real||'<div class="doc">No activity-specific material has been mapped yet.</div>'}</div>
+<details style="margin-top:14px"><summary style="cursor:pointer;font-weight:800;color:var(--navy)">View complete PM → Controls Lead material library</summary>
+<div class="docs" style="margin-top:10px">${(window.courseMaterials||[]).map((m,i)=>`<div class="doc">${m.title} <button class="btn" style="float:right;padding:5px 8px" onclick="openMaterial(${i})">Open</button></div>`).join('')}</div></details>`;
+}
+ if(si===1){
+ const am=(window.audioManifest.activities||{})[a.id]||{};
+ content.innerHTML=a.narration?`<div class="kicker">LISTEN · PROJECT STORY</div><h2>${a.narrationTitle||a.title}</h2>
+ <p class="body" id="narrationText">${a.narration}</p>
+ <div class="audio"><audio id="prodAudio" controls style="width:100%;display:${am.storage_path?'block':'none'}"></audio>
+ <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">
+ <button class="btn" onclick="playNarration()">▶ Play</button><button class="btn" onclick="pauseNarration()">Ⅱ Pause</button><button class="btn" onclick="restartNarration()">↺ Replay</button>
+ <select id="speed" onchange="setNarrationSpeed(this.value)" style="padding:8px;border:1px solid var(--line);border-radius:8px"><option>.75</option><option selected>1</option><option>1.25</option><option>1.5</option></select>
+ </div><div class="muted" id="audioStatus" style="margin-top:8px">${am.storage_path?'Production audio configured':'Production audio pending · browser voice fallback available'}</div></div>`:missing(a,'First-person narration');
+ if(a.narration && am.storage_path)setTimeout(()=>bindProductionAudio(am.storage_path),0);
+}
+ if(si===2){
+ let pref=((window.activityMaterialMap.activity_mapping||{})[a.id]||{}).preferred||[];
+ let mapped=(window.courseMaterials||[]).map((m,i)=>({...m,_idx:i})).filter(m=>pref.includes(m.title));
+ let cards=mapped.map(m=>`<div class="doc"><b>${m.title}</b><br><span class="muted">${m.filename}</span><button class="btn" style="float:right;padding:6px 9px" onclick="openMaterial(${m._idx})">SHOW ME</button></div>`).join('');
+ content.innerHTML=`<div class="kicker">OBSERVE · REAL TIB MATERIALS</div><h2>Now Look at the Work Products</h2><p class="body">Open the materials mapped to this project activity. Browser-readable files open inside the expanded TIB viewer; Word and Excel originals open securely in their native viewer.</p><div class="docs">${cards||'<div class="doc">No real artifact has been mapped to this activity yet.</div>'}</div><div class="flow">The main learning area now receives the full display width. Wide tables are not forced into a narrow reading column.</div>`;
+}
+ if(si===3){
+ let docs=(a.sourceDocuments||[]).map(x=>`<div class="doc">▤ ${x}</div>`).join('');
+ content.innerHTML=`<div class="kicker">BUILD · YOUR TURN</div><h2>You Are Now the Controls Lead</h2><p class="body">${a.exercise||'Use only the supplied client information. Do not invent missing facts; leave unsupported information outstanding.'}</p><div class="docs">${docs}</div>${a.blankWorkbook?`<p><a class="btn" style="display:inline-block;text-decoration:none" href="${a.blankWorkbook}" download>↓ Download Blank Workbook</a></p>`:''}<div class="audio"><b>Submit your completed workbook</b><br><input id="submissionFile" type="file" accept=".xlsx,.xls,.csv,.docx,.pdf" style="margin:10px 0"><br><button class="btn maroon" onclick="uploadSubmission()">Upload to TIB Academy</button><div class="muted" id="uploadMsg" style="margin-top:8px"></div></div>${submissionStatusHtml(a.id)}`;
+}
+ if(si===4){
+ let saved=JSON.parse(localStorage.getItem('tib_ila_review_'+a.id)||'{}');
+ let qs=(a.reviewQuestions||[]).map((q,i)=>`<div class="mini"><b>${i+1}. ${q}</b><textarea id="review_${i}" oninput="saveReview('${a.id}',${i},this.value)">${saved[i]||''}</textarea><div class="answerSaved">Saved in this browser</div></div>`).join('');
+ content.innerHTML=qs?`<div class="kicker">COMPARE · SELF-REVIEW</div><h2>Your Work ⇄ TIB Completed Example</h2><p class="body">Compare for judgment, evidence and completeness—not simply wording. Your answers become your preparation for instructor review.</p><div class="grid2">${qs}</div>${submissionStatusHtml(a.id)}<div class="assessBox"><button class="btn maroon" onclick="completeCompare()">Complete Self-Review</button><span class="muted" id="compareMsg" style="margin-left:8px"></span></div>`:missing(a,'Comparison questions');
+}
+ if(si===5){let c=a.connect||{};content.innerHTML=c.buildNext?`<div class="kicker">CONNECT</div><h2>Why Does the Next Workbook Exist?</h2><div class="grid2"><div class="mini"><b>WHAT I NOW KNOW</b><p>${c.nowKnow||''}</p></div><div class="mini"><b>WHAT I STILL NEED TO KNOW</b><p>${c.stillNeed||''}</p></div></div><div class="next"><b>WHAT I BUILD NEXT</b><p>${c.buildNext}</p></div>${a.nextActivity?'<button class="btn maroon" onclick="nextActivity()">Start Next Activity →</button>':''}`:missing(a,'CONNECT reasoning')}
+}
+let activeUtterance=null,narrationRate=1;
+async function bindProductionAudio(path){
+ const {data:signed,error}=await sb.storage.from(MATERIALS_BUCKET).createSignedUrl(path,1800);
+ if(error){audioStatus.textContent='Production audio unavailable · browser voice fallback available';return}
+ prodAudio.src=signed.signedUrl;prodAudio.style.display='block';
+}
+function playNarration(){
+ const am=(window.audioManifest.activities||{})[data.activities[ai].id]||{};
+ if(am.storage_path && document.getElementById('prodAudio') && prodAudio.src){prodAudio.playbackRate=narrationRate;prodAudio.play();return}
+ if(!('speechSynthesis'in window))return alert('Narration playback is unavailable in this browser.');
+ if(speechSynthesis.paused){speechSynthesis.resume();return}
+ speechSynthesis.cancel();activeUtterance=new SpeechSynthesisUtterance(data.activities[ai].narration||'');activeUtterance.rate=narrationRate;speechSynthesis.speak(activeUtterance);
+}
+function pauseNarration(){if(document.getElementById('prodAudio')&&!prodAudio.paused)prodAudio.pause();if('speechSynthesis'in window)speechSynthesis.pause()}
+function restartNarration(){if(document.getElementById('prodAudio')&&prodAudio.src){prodAudio.currentTime=0;prodAudio.playbackRate=narrationRate;prodAudio.play();return}if('speechSynthesis'in window){speechSynthesis.cancel();playNarration()}}
+function setNarrationSpeed(v){narrationRate=Number(v);if(document.getElementById('prodAudio'))prodAudio.playbackRate=narrationRate;if(activeUtterance&&speechSynthesis.speaking){speechSynthesis.cancel();playNarration()}}
+async function nextActivity(){
+ const old=data.activities[ai],n=data.activities.findIndex(x=>x.id===old.nextActivity);
+ if(n>=0){
+   await saveRemoteProgress(old.id,'completed',100,{current_project_stage:data.activities[n].projectStage});
+   ai=n;si=0;render();
+ }
+}
+
+let currentViewerUrl='',currentViewerMaterial=null;
+async function openMaterial(index){
+ const m=(window.courseMaterials||[])[index]; if(!m||!m.storage_path)return;
+ const {data,error}=await sb.storage.from(MATERIALS_BUCKET).createSignedUrl(m.storage_path,1800);
+ if(error)return alert('Unable to open this course material: '+error.message);
+ currentViewerUrl=data.signedUrl;currentViewerMaterial=m;viewerTitle.textContent=m.title;
+ const ext=(m.filename||'').split('.').pop().toLowerCase();
+ viewer.style.display='flex';
+ // Browsers render PDF/images/text well. Office files need a conversion/preview service for faithful inline rendering,
+ // so this release provides a large clean viewer state plus original-file access rather than pretending iframe support.
+ if(['pdf','png','jpg','jpeg','webp','gif','txt'].includes(ext)){
+   viewerBody.innerHTML=`<iframe class="viewerFrame" src="${currentViewerUrl}"></iframe>`;
+ }else{
+   viewerBody.innerHTML=`<div class="viewerFallback"><div class="fileCard"><div class="kicker">TIB COURSE MATERIAL</div><h2>${m.title}</h2><p class="body"><b>${m.filename}</b></p><p>This is an original Microsoft Office training artifact stored securely in TIB Academy. Use <b>Open Original</b> to view it in the device's native Office/Excel application. The production viewer is deliberately full-width so converted previews can use the entire learning area without the blank side column or overlapping tables.</p><div class="flow">Viewer rule: preserve the original document. Do not squeeze wide Excel tables into a narrow page.</div><p class="wideHint">Batch 13 supports native inline preview for browser-renderable formats and secure original-file access for Word/Excel.</p></div></div>`;
+ }
+}
+function closeViewer(){viewer.style.display='none';viewerBody.innerHTML=''}
+function openViewerExternal(){if(currentViewerUrl)window.open(currentViewerUrl,'_blank','noopener')}
+function viewerFullscreen(){if(viewer.requestFullscreen)viewer.requestFullscreen()}
+
+
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+function saveReview(activityId,i,value){
+ let x=JSON.parse(localStorage.getItem('tib_ila_review_'+activityId)||'{}');x[i]=value;localStorage.setItem('tib_ila_review_'+activityId,JSON.stringify(x));
+}
+function submissionStatusHtml(itemId){
+ const x=(window.mySubmissions||[]).find(s=>s.item_id===itemId);if(!x)return '<div class="submissionCard"><b>Submission status:</b> Not yet submitted</div>';
+ let score=x.score!=null?` <span class="scoreBadge">Score ${x.score}</span>`:'';
+ let comments=x.reviewer_comments?`<p><b>Instructor feedback:</b> ${esc(x.reviewer_comments)}</p>`:'';
+ return `<div class="submissionCard"><b>Submission:</b> ${esc(x.original_filename)}<br><span class="muted">Status: ${esc(x.status)}</span>${score}${comments}</div>`;
+}
+async function completeCompare(){
+ const a=data.activities[ai], qs=a.reviewQuestions||[], saved=JSON.parse(localStorage.getItem('tib_ila_review_'+a.id)||'{}');
+ const missing=qs.some((_,i)=>!(saved[i]||'').trim());
+ if(missing){compareMsg.textContent='Answer every review question before completing.';return}
+ await saveRemoteProgress(a.id,'completed',100,{current_project_stage:a.projectStage,self_review:saved});
+ compareMsg.textContent='✓ Self-review completed and progress saved.';
+}
+
+async function uploadSubmission(){
+ const input=document.getElementById('submissionFile'),msg=document.getElementById('uploadMsg');
+ const file=input&&input.files&&input.files[0]; if(!file){msg.textContent='Choose your completed workbook first.';return}
+ msg.textContent='Uploading securely…';
+ const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+ const item=data.activities[ai].id;
+ const path=`${currentUser.id}/${APP_COURSE_ID}/${item}/${Date.now()}_${safe}`;
+ const {error:upErr}=await sb.storage.from(SUBMISSIONS_BUCKET).upload(path,file,{upsert:false});
+ if(upErr){msg.textContent='Upload failed: '+upErr.message;return}
+ const {error:dbErr}=await sb.from('academy_submissions').insert({
+   user_id:currentUser.id,app_course_id:APP_COURSE_ID,item_id:item,
+   submission_type:'assignment',storage_path:path,original_filename:file.name,status:'submitted'
+ });
+ if(dbErr){msg.textContent='File uploaded, but submission record failed: '+dbErr.message;return}
+ await saveRemoteProgress(item,'submitted',75,{current_project_stage:data.activities[ai].projectStage,submission_path:path});
+ window.mySubmissions=[{item_id:item,original_filename:file.name,status:'submitted',score:null,reviewer_comments:null,submitted_at:new Date().toISOString()},...(window.mySubmissions||[])];
+ msg.textContent='✓ Submitted securely to TIB Academy.';
+}
+
+init();
+</script></body></html>

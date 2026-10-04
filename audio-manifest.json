@@ -1,0 +1,52 @@
+{
+  "course": "pm_to_controls_lead",
+  "provider_strategy": "approved narration -> generated production audio -> private academy-materials storage -> signed playback URL",
+  "browser_tts_fallback": true,
+  "activities": {
+    "environment": {
+      "audio_title": "Environment \u2014 Controls Lead Narration",
+      "storage_path": null,
+      "status": "awaiting-production-audio"
+    },
+    "information-flows": {
+      "audio_title": "Information Flows \u2014 Controls Lead Narration",
+      "storage_path": null,
+      "status": "awaiting-approved-narration"
+    },
+    "business-processes": {
+      "audio_title": "Business Processes \u2014 Controls Lead Narration",
+      "storage_path": null,
+      "status": "awaiting-approved-narration"
+    },
+    "risks": {
+      "audio_title": "Risks \u2014 Controls Lead Narration",
+      "storage_path": null,
+      "status": "awaiting-approved-narration"
+    },
+    "controls": {
+      "audio_title": "Controls \u2014 Controls Lead Narration",
+      "storage_path": null,
+      "status": "awaiting-approved-narration"
+    },
+    "owners": {
+      "audio_title": "Owners \u2014 Controls Lead Narration",
+      "storage_path": null,
+      "status": "awaiting-approved-narration"
+    },
+    "evidence": {
+      "audio_title": "Evidence \u2014 Controls Lead Narration",
+      "storage_path": null,
+      "status": "awaiting-approved-narration"
+    },
+    "testing": {
+      "audio_title": "Testing \u2014 Controls Lead Narration",
+      "storage_path": null,
+      "status": "awaiting-approved-narration"
+    },
+    "results": {
+      "audio_title": "Results \u2014 Controls Lead Narration",
+      "storage_path": null,
+      "status": "awaiting-approved-narration"
+    }
+  }
+}

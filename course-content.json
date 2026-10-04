@@ -1,0 +1,104 @@
+{
+  "course": {
+    "id": "pm-controls-lead",
+    "title": "PM \u2192 Controls Lead",
+    "projectMap": [
+      "Environment",
+      "Information Flows",
+      "Business Processes",
+      "Risks",
+      "Controls",
+      "Owners",
+      "Evidence",
+      "Testing",
+      "Results"
+    ]
+  },
+  "activities": [
+    {
+      "id": "environment",
+      "projectStage": "Environment",
+      "title": "Landscape and System Inventory",
+      "narrationTitle": "Day One \u2014 I Start the Engagement",
+      "narration": "I begin by meeting with the executive sponsor to understand what management expects from the controls review, the concerns they want addressed, the people who will participate, and how unresolved matters should be escalated. I then meet with the Head of IT Applications to begin understanding the client's technology environment. I ask for the Landscape Diagram and System List, the Hosting and Data-Centre Details, and any other existing documents that explain the environment. I use this information to begin building the Landscape and System Inventory.",
+      "sourceDocuments": [
+        "Landscape Diagram and System List",
+        "Hosting and Data-Centre Details",
+        "Day One Interview Notes"
+      ],
+      "blankWorkbook": "blank_landscape_system_inventory.csv",
+      "completedWorkbook": "Landscape and System Inventory",
+      "reviewQuestions": [
+        "What did you identify correctly?",
+        "What did you miss?",
+        "Did you record anything without proof?",
+        "What should remain outstanding?",
+        "What would you ask next?",
+        "Who would you ask?"
+      ],
+      "nextActivity": "information-flows",
+      "connect": {
+        "nowKnow": "The systems and components that support the client's environment.",
+        "stillNeed": "How important business information enters, leaves and moves between systems.",
+        "buildNext": "Interface and Data Flow Inventory"
+      }
+    },
+    {
+      "id": "information-flows",
+      "projectStage": "Information Flows",
+      "title": "Interface and Data Flow Inventory",
+      "narrationTitle": "I Follow How Information Moves",
+      "status": "ready-for-content",
+      "nextActivity": "business-processes"
+    },
+    {
+      "id": "business-processes",
+      "projectStage": "Business Processes",
+      "title": "Module and Business Process Scope",
+      "status": "ready-for-content",
+      "nextActivity": "risks"
+    },
+    {
+      "id": "risks",
+      "projectStage": "Risks",
+      "title": "Risk Register",
+      "status": "ready-for-content",
+      "nextActivity": "controls"
+    },
+    {
+      "id": "controls",
+      "projectStage": "Controls",
+      "title": "Risk and Control Matrix",
+      "status": "ready-for-content",
+      "nextActivity": "owners"
+    },
+    {
+      "id": "owners",
+      "projectStage": "Owners",
+      "title": "Control and Evidence Owner Matrix",
+      "status": "ready-for-content",
+      "nextActivity": "evidence"
+    },
+    {
+      "id": "evidence",
+      "projectStage": "Evidence",
+      "title": "Evidence Request Register / Evidence Index",
+      "status": "ready-for-content",
+      "nextActivity": "testing"
+    },
+    {
+      "id": "testing",
+      "projectStage": "Testing",
+      "title": "Test Plan / Test Workpapers / Sample Selection",
+      "status": "ready-for-content",
+      "nextActivity": "results"
+    },
+    {
+      "id": "results",
+      "projectStage": "Results",
+      "title": "Deficiency and Remediation Log / Coverage Dashboard",
+      "status": "ready-for-content",
+      "nextActivity": null
+    }
+  ]
+}
