@@ -64,7 +64,7 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
 </style>
 </head>
 <body>
-<header><div><div class="brand">TIB ACADEMY</div><small>INTERACTIVE LEARNING</small></div><div class="spacer"></div><span class="userChip" id="userChip">Not signed in</span><button class="refBtn" onclick="openCourseOverview()">Course Overview</button><button class="refBtn" onclick="openCorvaneReference()">Corvane Project Reference</button><button class="refBtn" onclick="openSampleDocumentLibrary()">Sample Documents</button><a class="adminLink" href="content-admin.html">Content Admin</a><a class="adminLink" href="#" onclick="sb.auth.signOut();location.reload();return false">Sign Out</a></header>
+<header><div><div class="brand">TIB ACADEMY</div><small>INTERACTIVE LEARNING</small></div><div class="spacer"></div><span class="userChip" id="userChip">Not signed in</span><button class="refBtn" onclick="openCourseOverview()">Course Overview</button><button class="refBtn" onclick="openJobMarketAlignment()">Job Market Fit</button><button class="refBtn" onclick="openCorvaneReference()">Corvane Project Reference</button><button class="refBtn" onclick="openSampleDocumentLibrary()">Sample Documents</button><a class="adminLink" href="content-admin.html">Content Admin</a><a class="adminLink" href="#" onclick="sb.auth.signOut();location.reload();return false">Sign Out</a></header>
 <div class="viewer" id="viewer">
  <div class="viewerHead"><button class="viewerBack" onclick="courseHome()">← Course Home</button><button class="viewerBack" id="libraryBackBtn" onclick="openSampleDocumentLibrary()" style="display:none">← Sample Library</button><b id="viewerTitle">Document Viewer</b><div class="spacer"></div>
  <div class="viewerActions"><button class="viewerBtn" onclick="downloadViewerOriginal()">Download Original</button><button class="viewerBtn" onclick="viewerFullscreen()">Full Screen</button><button class="viewerBtn" onclick="closeViewer()">Close</button></div></div>
@@ -128,6 +128,9 @@ async function enterAcademy(user){
  if(saved){let x=data.activities.findIndex(a=>a.projectStage===saved.data.current_project_stage);if(x>=0)ai=x}
  if(!(window.remoteProgress||[]).length){const savedAi=Number(localStorage.getItem('tib_ila_activity'));if(Number.isInteger(savedAi)&&savedAi>=0&&savedAi<data.activities.length)ai=savedAi;}
  render();
+ // Course Overview is the application entrance page for every authenticated course entry.
+ // It is orientation, not an activity, and does not alter progress or the saved resume position.
+ setTimeout(openCourseOverview,150);
 }
 async function saveRemoteProgress(item,status,percent,extra={}){
  if(!currentUser)return;
@@ -153,6 +156,7 @@ const THEORY_REFS={
  'lead-07':[['B9','AI in Controls','foundation-b9.html']],
  'lead-08':[['B10','Practitioner Capstone','foundation-b10.html']]
 };
+function openJobMarketAlignment(){showLibraryBack(false);currentViewerUrl='job-market-alignment.html';currentViewerMaterial={title:'Job Market Fit',filename:'job-market-alignment.html'};viewerTitle.textContent='Why This Course Matches the Job';viewerBody.innerHTML='<iframe src="job-market-alignment.html" style="width:100%;height:100%;min-height:78vh;border:0;background:#fff"></iframe>';viewer.style.display='flex';viewer.classList.add('open');}
 function openCourseOverview(){showLibraryBack(false);currentViewerUrl='course-overview.html';currentViewerMaterial={title:'Course Overview',filename:'course-overview.html'};viewerTitle.textContent='TIB ILA Course Overview';viewerBody.innerHTML='<iframe src="course-overview.html" style="width:100%;height:100%;min-height:78vh;border:0;background:#fff"></iframe>';viewer.style.display='flex';viewer.classList.add('open');}
 function openFoundation(){showLibraryBack(false);currentViewerUrl='foundation.html';currentViewerMaterial={title:'FOUNDATION · Controls Theory',filename:'foundation.html'};viewerTitle.textContent='FOUNDATION · Controls Theory';viewerBody.innerHTML='<iframe src="foundation.html" style="width:100%;height:100%;min-height:78vh;border:0;background:#fff"></iframe>';viewer.style.display='flex';viewer.classList.add('open');}
 function theoryReferenceCards(a){const xs=THEORY_REFS[a.id]||[];if(!xs.length)return '';return `<div style="margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#f8fafc"><b style="color:var(--navy)">Theory Reference</b><div class="docs" style="margin-top:8px">${xs.map(x=>`<div class="doc"><b>${x[0]} — ${x[1]}</b><button class="btn" style="float:right;padding:6px 9px" onclick="openEnhancement('${x[2]}','${x[0]} — ${x[1]}')">Open</button></div>`).join('')}</div></div>`;}
