@@ -6,7 +6,7 @@ This package gives Controls Lead trainees realistic fictitious client documents 
 How to use
 1. Read the fieldwork narration.
 2. Open the relevant Corvane sample.
-3. Compare it with the authoritative/public real-world reference in 00_REAL_WORLD_SOURCE_MAP.xlsx.
+3. Compare it with the authoritative/public real-world reference in sample-00-sources.xlsx.
 4. Identify the people, systems, processes, risks, controls, evidence and open questions.
 5. Use those facts to populate the TIB controls workbooks.
 

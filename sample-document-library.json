@@ -4,123 +4,123 @@
   "files": [
     {
       "title": "00 REAL WORLD SOURCE MAP",
-      "filename": "00_REAL_WORLD_SOURCE_MAP.xlsx",
-      "path": "00_REAL_WORLD_SOURCE_MAP.xlsx"
+      "filename": "sample-00-sources.xlsx",
+      "path": "sample-00-sources.xlsx"
     },
     {
       "title": "00 SAMPLE DOCUMENT LIBRARY INDEX",
-      "filename": "00_SAMPLE_DOCUMENT_LIBRARY_INDEX.xlsx",
-      "path": "00_SAMPLE_DOCUMENT_LIBRARY_INDEX.xlsx"
+      "filename": "sample-00-index.xlsx",
+      "path": "sample-00-index.xlsx"
     },
     {
       "title": "01 Landscape and System Overview",
-      "filename": "01_Landscape_and_System_Overview.docx",
-      "path": "01_Landscape_and_System_Overview.docx"
+      "filename": "sample-01-landscape.docx",
+      "path": "sample-01-landscape.docx"
     },
     {
       "title": "02 Hosting and Data Centre Details",
-      "filename": "02_Hosting_and_Data_Centre_Details.docx",
-      "path": "02_Hosting_and_Data_Centre_Details.docx"
+      "filename": "sample-02-hosting.docx",
+      "path": "sample-02-hosting.docx"
     },
     {
       "title": "03 Transport and Change Management Procedure",
-      "filename": "03_Transport_and_Change_Management_Procedure.docx",
-      "path": "03_Transport_and_Change_Management_Procedure.docx"
+      "filename": "sample-03-change.docx",
+      "path": "sample-03-change.docx"
     },
     {
       "title": "04 Interface List and Integration Design",
-      "filename": "04_Interface_List_and_Integration_Design.docx",
-      "path": "04_Interface_List_and_Integration_Design.docx"
+      "filename": "sample-04-interfaces.docx",
+      "path": "sample-04-interfaces.docx"
     },
     {
       "title": "05 Organisation and Process Owner List",
-      "filename": "05_Organisation_and_Process_Owner_List.docx",
-      "path": "05_Organisation_and_Process_Owner_List.docx"
+      "filename": "sample-05-owners.docx",
+      "path": "sample-05-owners.docx"
     },
     {
       "title": "06 Process Narrative P2P",
-      "filename": "06_Process_Narrative_P2P.docx",
-      "path": "06_Process_Narrative_P2P.docx"
+      "filename": "sample-06-p2p.docx",
+      "path": "sample-06-p2p.docx"
     },
     {
       "title": "07 Access Management and Leaver Procedure",
-      "filename": "07_Access_Management_and_Leaver_Procedure.docx",
-      "path": "07_Access_Management_and_Leaver_Procedure.docx"
+      "filename": "sample-07-access.docx",
+      "path": "sample-07-access.docx"
     },
     {
       "title": "08 Emergency Access Procedure",
-      "filename": "08_Emergency_Access_Procedure.docx",
-      "path": "08_Emergency_Access_Procedure.docx"
+      "filename": "sample-08-firefighter.docx",
+      "path": "sample-08-firefighter.docx"
     },
     {
       "title": "09 Job and Interface Monitoring Procedure",
-      "filename": "09_Job_and_Interface_Monitoring_Procedure.docx",
-      "path": "09_Job_and_Interface_Monitoring_Procedure.docx"
+      "filename": "sample-09-monitoring.docx",
+      "path": "sample-09-monitoring.docx"
     },
     {
       "title": "10 Backup and Recovery Policy",
-      "filename": "10_Backup_and_Recovery_Policy.docx",
-      "path": "10_Backup_and_Recovery_Policy.docx"
+      "filename": "sample-10-backup.docx",
+      "path": "sample-10-backup.docx"
     },
     {
       "title": "11 Financial Close and Journal Policy",
-      "filename": "11_Financial_Close_and_Journal_Policy.docx",
-      "path": "11_Financial_Close_and_Journal_Policy.docx"
+      "filename": "sample-11-close.docx",
+      "path": "sample-11-close.docx"
     },
     {
       "title": "12 Service Provider Assurance Review",
-      "filename": "12_Service_Provider_Assurance_Review.docx",
-      "path": "12_Service_Provider_Assurance_Review.docx"
+      "filename": "sample-12-provider.docx",
+      "path": "sample-12-provider.docx"
     },
     {
       "title": "13 Trial Balance and Chart of Accounts",
-      "filename": "13_Trial_Balance_and_Chart_of_Accounts.xlsx",
-      "path": "13_Trial_Balance_and_Chart_of_Accounts.xlsx"
+      "filename": "sample-13-tb-coa.xlsx",
+      "path": "sample-13-tb-coa.xlsx"
     },
     {
       "title": "14 Existing Risk and Control Matrix",
-      "filename": "14_Existing_Risk_and_Control_Matrix.xlsx",
-      "path": "14_Existing_Risk_and_Control_Matrix.xlsx"
+      "filename": "sample-14-rcm.xlsx",
+      "path": "sample-14-rcm.xlsx"
     },
     {
       "title": "15 Prior Year Testing",
-      "filename": "15_Prior_Year_Testing.xlsx",
-      "path": "15_Prior_Year_Testing.xlsx"
+      "filename": "sample-15-testing.xlsx",
+      "path": "sample-15-testing.xlsx"
     },
     {
       "title": "16 Prior Year Findings",
-      "filename": "16_Prior_Year_Findings.xlsx",
-      "path": "16_Prior_Year_Findings.xlsx"
+      "filename": "sample-16-findings.xlsx",
+      "path": "sample-16-findings.xlsx"
     },
     {
       "title": "17 SoD Rules and Mitigations",
-      "filename": "17_SoD_Rules_and_Mitigations.xlsx",
-      "path": "17_SoD_Rules_and_Mitigations.xlsx"
+      "filename": "sample-17-sod.xlsx",
+      "path": "sample-17-sod.xlsx"
     },
     {
       "title": "18 Key Report Inventory",
-      "filename": "18_Key_Report_Inventory.xlsx",
-      "path": "18_Key_Report_Inventory.xlsx"
+      "filename": "sample-18-reports.xlsx",
+      "path": "sample-18-reports.xlsx"
     },
     {
       "title": "19 Materiality and Audit Scoping",
-      "filename": "19_Materiality_and_Audit_Scoping.xlsx",
-      "path": "19_Materiality_and_Audit_Scoping.xlsx"
+      "filename": "sample-19-scoping.xlsx",
+      "path": "sample-19-scoping.xlsx"
     },
     {
       "title": "20 Close Calendar and Key People",
-      "filename": "20_Close_Calendar_and_Key_People.xlsx",
-      "path": "20_Close_Calendar_and_Key_People.xlsx"
+      "filename": "sample-20-calendar.xlsx",
+      "path": "sample-20-calendar.xlsx"
     },
     {
       "title": "21 Evidence Request and Index",
-      "filename": "21_Evidence_Request_and_Index.xlsx",
-      "path": "21_Evidence_Request_and_Index.xlsx"
+      "filename": "sample-21-evidence.xlsx",
+      "path": "sample-21-evidence.xlsx"
     },
     {
       "title": "22 Test Workpaper and Sample Log",
-      "filename": "22_Test_Workpaper_and_Sample_Log.xlsx",
-      "path": "22_Test_Workpaper_and_Sample_Log.xlsx"
+      "filename": "sample-22-workpaper.xlsx",
+      "path": "sample-22-workpaper.xlsx"
     }
   ]
 }

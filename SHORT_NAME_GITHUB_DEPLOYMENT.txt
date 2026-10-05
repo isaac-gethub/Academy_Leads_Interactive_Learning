@@ -1,0 +1,19 @@
+TIB ILA — SHORT-FILENAME FLAT GITHUB DEPLOYMENT
+
+This package is intentionally FLAT: no subfolders.
+All runtime Office/sample files use short, web-safe filenames to prevent Windows 8.3 filename shortening during upload.
+
+DEPLOYMENT
+1. Extract this ZIP.
+2. In the existing GitHub repository, upload ALL files from this extracted folder to the repository root.
+3. Commit the upload.
+4. Vercel should redeploy automatically.
+5. Old long-name and ~1 files can remain temporarily, but the new app does not reference them. After validation, delete obsolete duplicates.
+
+KEY RUNTIME FILES
+corvane-reference.xlsx
+lead-templates.xlsx
+blank-landscape.csv
+sample-00-sources.xlsx
+sample-00-index.xlsx
+sample-01-landscape.docx through sample-22-workpaper.xlsx

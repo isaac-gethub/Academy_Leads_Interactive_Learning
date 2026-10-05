@@ -10,4 +10,4 @@ This production correction integrates the Corvane Energy Controls Project Metada
 - Does not alter BUILD IT, LEAD IT, OWN IT, progress, submissions, assessment, or enrollment logic.
 
 The reference workbook is packaged at the deployment root as:
-`Corvane_Energy_Controls_Project_Metadata_Training_Reference.xlsx`
+`corvane-reference.xlsx`
