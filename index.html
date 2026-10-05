@@ -78,14 +78,14 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
 <button class="btn" onclick="signIn()">Sign In</button>
 <div class="authMsg" id="authMsg"></div>
 </div></div><div class="layout">
-<aside class="side"><h4>PROJECT MAP</h4><div class="map" id="map"></div></aside>
+<aside class="side"><h4>PROJECT MAP</h4><div class="map"><button id="foundationNav" onclick="openFoundation()"><b>FOUNDATION · Controls Theory</b></button></div><div class="map" id="map"></div></aside>
 <main>
  <div class="crumb" id="crumb"></div><h1 id="activityTitle"></h1><div class="muted" id="projectStage"></div>
  <div class="progress"><div class="bar"><i id="bar"></i></div><small class="muted" id="progressText"></small></div>
  <div class="stages" id="stages"></div>
  <section class="card" id="content"></section>
 </main>
-<aside class="side right"><h4>MY COURSE</h4><b>PM → Controls Lead / Manager</b><p class="muted">BUILD IT → LEAD IT → OWN IT</p><div class="stat" id="pct">0%</div><p class="muted">Current activity</p><b id="current"></b><hr style="border:0;border-top:1px solid var(--line);margin:16px 0"><b>Leadership objective</b><p class="muted">Learn how every core artifact is built, then learn to assign, review, challenge, approve, escalate and govern the team that executes the work.</p></aside>
+<aside class="side right"><h4>MY COURSE</h4><b>PM → Controls Lead / Manager</b><p class="muted">FOUNDATION → BUILD IT → LEAD IT → OWN IT</p><div class="stat" id="pct">0%</div><p class="muted">Current activity</p><b id="current"></b><hr style="border:0;border-top:1px solid var(--line);margin:16px 0"><b>Leadership objective</b><p class="muted">Learn how every core artifact is built, then learn to assign, review, challenge, approve, escalate and govern the team that executes the work.</p></aside>
 </div>
 <script>
 const SUPABASE_URL='https://blfgwysgekfqhcafofhe.supabase.co';
@@ -142,6 +142,20 @@ function render(){
  renderStage(a);
 }
 function missing(a,what){return `<div class="kicker">${stageNames[si]}</div><h2>${a.projectStage}</h2><p class="body">This activity is ready in the reusable learning engine. ${what} has not yet been populated in the course-content model.</p><div class="flow">Content Admin → add approved content → the trainee player loads it here automatically.</div>`}
+
+const THEORY_REFS={
+ 'risks':[['B1','Risk Types','foundation-b1.html']],
+ 'controls':[['B2','Control Types','foundation-b2.html'],['B3','Control Nature','foundation-b3.html'],['B4','Why Controls Matter','foundation-b4.html']],
+ 'testing':[['B8','Testing Decisions','foundation-b8.html']],
+ 'lead-04':[['B6','S/4HANA Lifecycle','foundation-b6.html']],
+ 'lead-05':[['B8','Testing Decisions','foundation-b8.html']],
+ 'lead-06':[['B8','Testing Decisions','foundation-b8.html']],
+ 'lead-07':[['B9','AI in Controls','foundation-b9.html']],
+ 'lead-08':[['B10','Practitioner Capstone','foundation-b10.html']]
+};
+function openFoundation(){showLibraryBack(false);currentViewerUrl='foundation.html';currentViewerMaterial={title:'FOUNDATION · Controls Theory',filename:'foundation.html'};viewerTitle.textContent='FOUNDATION · Controls Theory';viewerBody.innerHTML='<iframe src="foundation.html" style="width:100%;height:100%;min-height:78vh;border:0;background:#fff"></iframe>';viewer.classList.add('open');}
+function theoryReferenceCards(a){const xs=THEORY_REFS[a.id]||[];if(!xs.length)return '';return `<div style="margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#f8fafc"><b style="color:var(--navy)">Theory Reference</b><div class="docs" style="margin-top:8px">${xs.map(x=>`<div class="doc"><b>${x[0]} — ${x[1]}</b><button class="btn" style="float:right;padding:6px 9px" onclick="openEnhancement('${x[2]}','${x[0]} — ${x[1]}')">Open</button></div>`).join('')}</div></div>`;}
+
 function enhancementCards(a){
  const xs=a.enhancementMaterials||[];
  if(!xs.length)return '';
