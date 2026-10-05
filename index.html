@@ -23,6 +23,9 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
 .next{margin-top:14px;padding:14px;border-left:4px solid var(--maroon);background:#faf7f8}
 .right .stat{font-size:28px;font-weight:900;color:var(--navy)}.muted{color:var(--muted);font-size:13px}
 .mobileBtns{display:none}
+.refBtn{border:1px solid #ffffff55;background:#176b70;color:#fff;padding:8px 11px;border-radius:8px;cursor:pointer;font-weight:800}
+.refIntro{border:1px solid var(--line);background:#eef6f6;border-radius:10px;padding:10px 12px;margin:10px 0 14px;font-size:13px;color:#155e63}
+
 @media(max-width:900px){.layout{grid-template-columns:1fr}.side{display:none}.mobileBtns{display:flex;gap:7px}.grid2{grid-template-columns:1fr}main{padding:14px}}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -54,9 +57,9 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
 </style><script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx-preview@0.3.6/dist/docx-preview.min.js"></script>
-</head>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>\n</head>
 <body>
-<header><div><div class="brand">TIB ACADEMY</div><small>INTERACTIVE LEARNING</small></div><div class="spacer"></div><span class="userChip" id="userChip">Not signed in</span><a class="adminLink" href="content-admin.html">Content Admin</a><a class="adminLink" href="#" onclick="sb.auth.signOut();location.reload();return false">Sign Out</a></header>
+<header><div><div class="brand">TIB ACADEMY</div><small>INTERACTIVE LEARNING</small></div><div class="spacer"></div><span class="userChip" id="userChip">Not signed in</span><button class="refBtn" onclick="openCorvaneReference()">Corvane Project Reference</button><a class="adminLink" href="content-admin.html">Content Admin</a><a class="adminLink" href="#" onclick="sb.auth.signOut();location.reload();return false">Sign Out</a></header>
 <div class="viewer" id="viewer">
  <div class="viewerHead"><button class="viewerBack" onclick="closeViewer()">← Back to Course</button><b id="viewerTitle">Document Viewer</b><div class="spacer"></div>
  <div class="viewerActions"><button class="viewerBtn" onclick="downloadViewerOriginal()">Download Original</button><button class="viewerBtn" onclick="viewerFullscreen()">Full Screen</button><button class="viewerBtn" onclick="closeViewer()">Close</button></div></div>
@@ -77,7 +80,7 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
  <div class="stages" id="stages"></div>
  <section class="card" id="content"></section>
 </main>
-<aside class="side right"><h4>MY COURSE</h4><b>PM → Controls Lead</b><p class="muted">Interactive project simulation</p><div class="stat" id="pct">0%</div><p class="muted">Current activity</p><b id="current"></b><hr style="border:0;border-top:1px solid var(--line);margin:16px 0"><b>Batch 8</b><p class="muted">Dynamic Course Player. One six-stage engine now loads each project activity from the reusable content model.</p></aside>
+<aside class="side right"><h4>MY COURSE</h4><b>PM → Controls Lead / Manager</b><p class="muted">BUILD IT → LEAD IT → OWN IT</p><div class="stat" id="pct">0%</div><p class="muted">Current activity</p><b id="current"></b><hr style="border:0;border-top:1px solid var(--line);margin:16px 0"><b>Leadership objective</b><p class="muted">Learn how every core artifact is built, then learn to assign, review, challenge, approve, escalate and govern the team that executes the work.</p></aside>
 </div>
 <script>
 const SUPABASE_URL='https://blfgwysgekfqhcafofhe.supabase.co';
@@ -139,7 +142,7 @@ function renderStage(a){
  let pref=((window.activityMaterialMap.activity_mapping||{})[a.id]||{}).preferred||[];
  let selected=(window.courseMaterials||[]).map((m,i)=>({...m,_idx:i})).filter(m=>pref.includes(m.title));
  let real=selected.map(m=>`<div class="doc"><b>${m.title}</b><br><span class="muted">${m.category} · ${m.material_type}</span> <button class="btn" style="float:right;padding:6px 9px" onclick="openMaterial(${m._idx})">Open</button></div>`).join('');
- content.innerHTML=`<div class="kicker">SEE · FINISHED PRODUCT</div><h2>${a.title}</h2><p class="body">Before doing the work, see the finished work product and understand where it fits in the controls project.</p><div class="flow">${data.course.projectMap.join(' → ')}</div><h3 style="color:var(--navy);margin-top:20px">Materials for This Project Activity</h3><div class="docs">${real||'<div class="doc">No activity-specific material has been mapped yet.</div>'}</div>
+ content.innerHTML=a.leadershipAddon?`<div class="kicker">SEE · LEADERSHIP OUTCOME</div><h2>${a.title}</h2><p class="body"><b>Scenario:</b> ${a.scenario}</p><div class="flow"><b>Your leadership output:</b> ${a.artifact}</div><p class="body">${a.purpose}</p><p><a class="btn" style="display:inline-block;text-decoration:none" href="TIB_Controls_Lead_Manager_AddOn_Templates.xlsx" download>↓ Open Leadership Template Workbook</a></p>`:`<div class="kicker">SEE · FINISHED PRODUCT</div><h2>${a.title}</h2><p class="body">Before doing the work, see the finished work product and understand where it fits in the controls project.</p><div class="flow">${data.course.projectMap.join(' → ')}</div><h3 style="color:var(--navy);margin-top:20px">Materials for This Project Activity</h3><div class="docs">${real||'<div class="doc">No activity-specific material has been mapped yet.</div>'}</div>
 <details style="margin-top:14px"><summary style="cursor:pointer;font-weight:800;color:var(--navy)">View complete PM → Controls Lead material library</summary>
 <div class="docs" style="margin-top:10px">${(window.courseMaterials||[]).map((m,i)=>`<div class="doc">${m.title} <button class="btn" style="float:right;padding:5px 8px" onclick="openMaterial(${i})">Open</button></div>`).join('')}</div></details>`;
 }
@@ -158,11 +161,11 @@ function renderStage(a){
  let pref=((window.activityMaterialMap.activity_mapping||{})[a.id]||{}).preferred||[];
  let mapped=(window.courseMaterials||[]).map((m,i)=>({...m,_idx:i})).filter(m=>pref.includes(m.title));
  let cards=mapped.map(m=>`<div class="doc"><b>${m.title}</b><br><span class="muted">${m.filename}</span><button class="btn" style="float:right;padding:6px 9px" onclick="openMaterial(${m._idx})">SHOW ME</button></div>`).join('');
- content.innerHTML=`<div class="kicker">OBSERVE · REAL TIB MATERIALS</div><h2>Now Look at the Work Products</h2><p class="body">Open the materials mapped to this project activity. Open the materials mapped to this project activity. Word documents now open directly inside TIB ILA; original files remain available when you need them.</p><div class="docs">${cards||'<div class="doc">No real artifact has been mapped to this activity yet.</div>'}</div><div class="flow">Use the full learning area to review the project material before continuing.</div>`;
+ content.innerHTML=a.leadershipAddon?`<div class="kicker">OBSERVE · LEADERSHIP JUDGMENT</div><h2>Watch the Controls Lead Think</h2><p class="body">Review the leadership task before you perform it. Focus on the management decision represented by the artifact—not clerical completion.</p><div class="docs">${(a.observePrompts||[]).map((q,i)=>`<div class="doc"><b>${i+1}. ${q}</b></div>`).join('')}</div><div class="flow">Ask: What do I own? What do I delegate? What must I review? What must I challenge? What requires approval or escalation?</div><p><a class="btn" style="display:inline-block;text-decoration:none" href="TIB_Controls_Lead_Manager_AddOn_Templates.xlsx" download>↓ Review Leadership Template Workbook · ${a.templateSheet}</a></p>`:`<div class="kicker">OBSERVE · REAL TIB MATERIALS</div><h2>Now Look at the Work Products</h2><p class="body">Open the materials mapped to this project activity. Word documents now open directly inside TIB ILA; original files remain available when you need them.</p><div class="docs">${cards||'<div class="doc">No real artifact has been mapped to this activity yet.</div>'}</div><div class="flow">Use the full learning area to review the project material before continuing.</div>`;
 }
  if(si===3){
  let docs=(a.sourceDocuments||[]).map(x=>`<div class="doc">▤ ${x}</div>`).join('');
- content.innerHTML=`<div class="kicker">BUILD · YOUR TURN</div><h2>You Are Now the Controls Lead</h2><p class="body">${a.exercise||'Use only the supplied client information. Do not invent missing facts; leave unsupported information outstanding.'}</p><div class="docs">${docs}</div>${a.blankWorkbook?`<p><a class="btn" style="display:inline-block;text-decoration:none" href="${a.blankWorkbook}" download>↓ Download Blank Workbook</a></p>`:''}<div class="audio"><b>Submit your completed workbook</b><br><input id="submissionFile" type="file" accept=".xlsx,.xls,.csv,.docx,.pdf" style="margin:10px 0"><br><button class="btn maroon" onclick="uploadSubmission()">Upload to TIB Academy</button><div class="muted" id="uploadMsg" style="margin-top:8px"></div></div>${submissionStatusHtml(a.id)}`;
+ content.innerHTML=`<div class="kicker">BUILD · YOUR TURN</div><h2>You Are Now the Controls Lead</h2><p class="body">${a.exercise||'Use only the supplied client information. Do not invent missing facts; leave unsupported information outstanding.'}</p>${a.leadershipAddon?`<div class="flow"><b>Use template sheet:</b> ${a.templateSheet} · <b>Required output:</b> ${a.artifact}</div>`:''}<div class="docs">${docs}</div>${a.blankWorkbook?`<p><a class="btn" style="display:inline-block;text-decoration:none" href="${a.blankWorkbook}" download>↓ Download Blank Workbook</a></p>`:''}<div class="audio"><b>Submit your completed workbook</b><br><input id="submissionFile" type="file" accept=".xlsx,.xls,.csv,.docx,.pdf" style="margin:10px 0"><br><button class="btn maroon" onclick="uploadSubmission()">Upload to TIB Academy</button><div class="muted" id="uploadMsg" style="margin-top:8px"></div></div>${submissionStatusHtml(a.id)}`;
 }
  if(si===4){
  let saved=JSON.parse(localStorage.getItem('tib_ila_review_'+a.id)||'{}');
@@ -243,11 +246,60 @@ async function renderDocxSafeFallback(buffer,host){
    }
  }
  host.innerHTML='';
- const note=document.createElement('div');note.className='safeNote';
- note.textContent='TIB ILA recovered this document in reading mode because the original Word file contains formatting XML that the standard browser viewer could not process. The original file remains available from Download Original.';
- host.appendChild(note);
- blocks.forEach(x=>host.appendChild(x));
+ let textBlockIndex=0;
+ blocks.forEach(el=>{
+   if(el.tagName==='P'){
+     const t=(el.textContent||'').trim();
+     // Presentation-only hierarchy for recovered reading mode.
+     if(textBlockIndex===0 || /^(Building the |Training Manual\b)/i.test(t)) el.classList.add('rm-title');
+     else if(/^(From |Running case:)/i.test(t)) el.classList.add('rm-subtitle');
+     else if(/^(Session\s+\d+\b|Contents$)/i.test(t)) el.classList.add('rm-heading');
+     else if(/^\d+(?:\.\d+)+\s+/.test(t)) el.classList.add('rm-subheading');
+     textBlockIndex++;
+   }
+   host.appendChild(el);
+ });
  if(!blocks.length)throw new Error('No readable Word content could be recovered.');
+}
+
+
+async function renderXlsxInline(buffer){
+ if(!window.XLSX) throw new Error('Excel viewer library did not load.');
+ const book=XLSX.read(buffer,{type:'array',cellDates:true});
+ if(!book.SheetNames.length) throw new Error('This workbook contains no visible worksheets.');
+ viewerBody.innerHTML='<div class="xlsxView"><div id="xlsxTabs" class="xlsxTabs"></div><div id="xlsxTableWrap" class="xlsxTableWrap"></div></div>';
+ const tabs=document.getElementById('xlsxTabs'), wrap=document.getElementById('xlsxTableWrap');
+ function showSheet(name){
+   [...tabs.children].forEach(b=>b.classList.toggle('active',b.dataset.sheet===name));
+   const ws=book.Sheets[name];
+   wrap.innerHTML=XLSX.utils.sheet_to_html(ws,{editable:false});
+ }
+ book.SheetNames.forEach((name,i)=>{
+   const b=document.createElement('button'); b.type='button'; b.dataset.sheet=name; b.textContent=name;
+   b.onclick=()=>showSheet(name); tabs.appendChild(b);
+ });
+ showSheet(book.SheetNames[0]);
+}
+
+async function openCorvaneReference(){
+ const filename='Corvane_Energy_Controls_Project_Metadata_Training_Reference.xlsx';
+ currentViewerUrl=filename;
+ currentViewerMaterial={title:'Corvane Project Reference',filename};
+ viewerTitle.textContent='Corvane Project Reference';
+ viewer.style.display='flex';
+ viewerBody.innerHTML='<div class="viewerLoading"><b>Opening Corvane project reference…</b></div>';
+ try{
+   const response=await fetch(filename);
+   if(!response.ok)throw new Error('The Corvane project reference workbook could not be retrieved.');
+   const buffer=await response.arrayBuffer();
+   await renderXlsxInline(buffer);
+   const intro=document.createElement('div');
+   intro.className='refIntro';
+   intro.innerHTML='<b>Corvane Energy Group — Controls Project Reference</b><br>Use the worksheet tabs to look up people, systems, interfaces, business processes, risks, controls, owners, evidence, meetings, documents, project workbooks, testing and the complete relationship map.';
+   const view=viewerBody.querySelector('.xlsxView'); if(view)view.insertBefore(intro,view.firstChild);
+ }catch(e){
+   viewerBody.innerHTML=`<div class="viewerError"><h2>Corvane Project Reference could not be opened</h2><p>${esc(e.message||'The workbook could not be opened.')}</p><p>Select <b>Download Original</b> or <b>← Back to Course</b>.</p></div>`;
+ }
 }
 
 async function openMaterial(index){
@@ -294,6 +346,11 @@ async function openMaterial(index){
          await renderDocxSafeFallback(buffer,document.getElementById('safeDocxPaper'));
        }
      }
+   }else if(['xlsx','xls'].includes(ext)){
+     const response=await fetch(currentViewerUrl);
+     if(!response.ok)throw new Error('The workbook could not be retrieved.');
+     const buffer=await response.arrayBuffer();
+     await renderXlsxInline(buffer);
    }else if(['pdf','png','jpg','jpeg','webp','gif','txt'].includes(ext)){
      viewerBody.innerHTML=`<iframe class="viewerFrame" src="${currentViewerUrl}" title="${esc(m.title)}"></iframe>`;
    }else{
