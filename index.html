@@ -37,7 +37,7 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
 .viewer{position:fixed;inset:0;z-index:120;background:#eef2f6;display:none;flex-direction:column}
 .viewerHead{height:58px;background:#122a4a;color:#fff;display:flex;align-items:center;gap:10px;padding:0 14px}
 .viewerHead b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.viewerHead .spacer{flex:1}
-.viewerBody{flex:1;min-height:0;display:block;overflow:auto;overscroll-behavior:contain}
+.viewerBody{flex:1;min-height:0;display:block;overflow:auto;overscroll-behavior:contain}.viewerBody.htmlPage{overflow:hidden}
 .viewerFrame{width:100%;height:100%;border:0;background:#fff}
 .viewerFallback{padding:24px;overflow:auto;background:#fff;height:100%}
 .viewerFallback .fileCard{max-width:900px;margin:auto;border:1px solid #d9e2ea;border-radius:14px;padding:22px}
@@ -85,7 +85,7 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
  <div class="stages" id="stages"></div>
  <section class="card" id="content"></section>
 </main>
-<aside class="side right"><h4>MY COURSE</h4><b>PM → Controls Lead / Manager</b><p class="muted">FOUNDATION → BUILD IT → LEAD IT → OWN IT</p><div class="stat" id="pct">0%</div><p class="muted">Current activity</p><b id="current"></b><hr style="border:0;border-top:1px solid var(--line);margin:16px 0"><b>Leadership objective</b><p class="muted">Learn how every core artifact is built, then learn to assign, review, challenge, approve, escalate and govern the team that executes the work.</p></aside>
+<aside class="side right"><h4>MY COURSE</h4><b>LEARN TO LEAD</b><p class="muted" style="margin-top:5px;font-weight:700">SAP CONTROLS TEAM ON A LIVE PROJECT</p><p class="muted">FOUNDATION → BUILD IT → LEAD IT → OWN IT</p><div class="stat" id="pct">0%</div><p class="muted">Current activity</p><b id="current"></b><hr style="border:0;border-top:1px solid var(--line);margin:16px 0"><b>Leadership objective</b><p class="muted">Learn how every core artifact is built, then learn to assign, review, challenge, approve, escalate and govern the team that executes the work.</p></aside>
 </div>
 <script>
 const SUPABASE_URL='https://blfgwysgekfqhcafofhe.supabase.co';
@@ -114,7 +114,7 @@ async function enterAcademy(user){
  currentUser=user;userChip.textContent=user.email||'Signed in';
  const {data:enroll,error}=await sb.from('enrollments').select('course,is_active,start_date,expiry_date').eq('user_id',user.id).eq('course',ENROLLMENT_COURSE).eq('is_active',true).maybeSingle();
  if(error){authMsg.textContent='Unable to verify course access.';return}
- if(!enroll){authMsg.textContent='Your account is valid, but PM → Controls Lead is not currently assigned to this account.';return}
+ if(!enroll){authMsg.textContent='Your account is valid, but LEARN TO LEAD is not currently assigned to this account.';return}
  authGate.style.display='none';
  const {data:rows}=await sb.from('academy_progress').select('item_id,status,progress_percent,data').eq('user_id',user.id).eq('app_course_id',APP_COURSE_ID);
  window.remoteProgress=rows||[];
@@ -156,9 +156,12 @@ const THEORY_REFS={
  'lead-07':[['B9','AI in Controls','foundation-b9.html']],
  'lead-08':[['B10','Practitioner Capstone','foundation-b10.html']]
 };
-function openJobMarketAlignment(){showLibraryBack(false);currentViewerUrl='job-market-alignment.html';currentViewerMaterial={title:'Job Market Fit',filename:'job-market-alignment.html'};viewerTitle.textContent='Why This Course Matches the Job';viewerBody.innerHTML='<iframe src="job-market-alignment.html" style="width:100%;height:100%;min-height:78vh;border:0;background:#fff"></iframe>';viewer.style.display='flex';viewer.classList.add('open');}
-function openCourseOverview(){showLibraryBack(false);currentViewerUrl='course-overview.html';currentViewerMaterial={title:'Course Overview',filename:'course-overview.html'};viewerTitle.textContent='TIB ILA Course Overview';viewerBody.innerHTML='<iframe src="course-overview.html" style="width:100%;height:100%;min-height:78vh;border:0;background:#fff"></iframe>';viewer.style.display='flex';viewer.classList.add('open');}
-function openFoundation(){showLibraryBack(false);currentViewerUrl='foundation.html';currentViewerMaterial={title:'FOUNDATION · Controls Theory',filename:'foundation.html'};viewerTitle.textContent='FOUNDATION · Controls Theory';viewerBody.innerHTML='<iframe src="foundation.html" style="width:100%;height:100%;min-height:78vh;border:0;background:#fff"></iframe>';viewer.style.display='flex';viewer.classList.add('open');}
+function openStaticHtmlPage(path,title){
+ showLibraryBack(false);currentViewerUrl=path;currentViewerMaterial={title,filename:path};viewerTitle.textContent=title;viewerBody.classList.add('htmlPage');viewerBody.innerHTML=`<iframe src="${path}" style="display:block;width:100%;height:100%;border:0;background:#fff" title="${esc(title)}"></iframe>`;document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';viewer.style.display='flex';viewer.classList.add('open');
+}
+function openJobMarketAlignment(){openStaticHtmlPage('job-market-alignment.html','Why This Course Matches the Job');}
+function openCourseOverview(){openStaticHtmlPage('course-overview.html','TIB ILA Course Overview');}
+function openFoundation(){openStaticHtmlPage('foundation.html','FOUNDATION · Controls Theory');}
 function theoryReferenceCards(a){const xs=THEORY_REFS[a.id]||[];if(!xs.length)return '';return `<div style="margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#f8fafc"><b style="color:var(--navy)">Theory Reference</b><div class="docs" style="margin-top:8px">${xs.map(x=>`<div class="doc"><b>${x[0]} — ${x[1]}</b><button class="btn" style="float:right;padding:6px 9px" onclick="openEnhancement('${x[2]}','${x[0]} — ${x[1]}')">Open</button></div>`).join('')}</div></div>`;}
 
 function enhancementCards(a){
@@ -175,7 +178,7 @@ function renderStage(a){
  let selected=(window.courseMaterials||[]).map((m,i)=>({...m,_idx:i})).filter(m=>pref.includes(m.title));
  let real=selected.map(m=>`<div class="doc"><b>${m.title}</b><br><span class="muted">${m.category} · ${m.material_type}</span> <button class="btn" style="float:right;padding:6px 9px" onclick="openMaterial(${m._idx})">Open</button></div>`).join('');
  content.innerHTML=a.leadershipAddon?`<div class="kicker">SEE · LEADERSHIP OUTCOME</div><h2>${a.title}</h2><p class="body"><b>Scenario:</b> ${a.scenario}</p><div class="flow"><b>Your leadership output:</b> ${a.artifact}</div><p class="body">${a.purpose}</p><p><a class="btn" style="display:inline-block;text-decoration:none" href="lead-templates.xlsx" download>↓ Open Leadership Template Workbook</a></p>`:`<div class="kicker">SEE · FINISHED PRODUCT</div><h2>${a.title}</h2><p class="body">Before doing the work, see the finished work product and understand where it fits in the controls project.</p><div class="flow">${data.course.projectMap.join(' → ')}</div><h3 style="color:var(--navy);margin-top:20px">Materials for This Project Activity</h3><div class="docs">${real||'<div class="doc">No activity-specific material has been mapped yet.</div>'}</div>
-<details style="margin-top:14px"><summary style="cursor:pointer;font-weight:800;color:var(--navy)">View complete PM → Controls Lead material library</summary>
+<details style="margin-top:14px"><summary style="cursor:pointer;font-weight:800;color:var(--navy)">View complete LEARN TO LEAD material library</summary>
 <div class="docs" style="margin-top:10px">${(window.courseMaterials||[]).map((m,i)=>`<div class="doc">${m.title} <button class="btn" style="float:right;padding:5px 8px" onclick="openMaterial(${i})">Open</button></div>`).join('')}</div></details>`;
 }
  if(si===1){
@@ -418,7 +421,7 @@ async function openMaterial(index){
 function courseHome(){ closeViewer(); window.scrollTo({top:0,behavior:'smooth'}); }
 function closeViewer(){
  showLibraryBack(false);
- viewer.style.display='none';viewerBody.innerHTML='';
+ viewer.style.display='none';viewerBody.innerHTML='';viewerBody.classList.remove('htmlPage');document.documentElement.style.overflow='';document.body.style.overflow='';
  // Course remains exactly where the trainee left it (for example Environment · OBSERVE).
 }
 async function downloadViewerOriginal(){
