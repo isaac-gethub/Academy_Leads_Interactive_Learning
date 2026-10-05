@@ -1,7 +1,7 @@
 {
   "course": {
     "id": "pm-controls-lead",
-    "title": "PM \u2192 Controls Lead / Manager",
+    "title": "PM → Controls Lead / Manager",
     "projectMap": [
       "Environment",
       "Information Flows",
@@ -27,7 +27,7 @@
       "id": "environment",
       "projectStage": "Environment",
       "title": "Landscape and System Inventory",
-      "narrationTitle": "Day One \u2014 I Start the Engagement",
+      "narrationTitle": "Day One — I Start the Engagement",
       "narration": "I begin by meeting with the executive sponsor to understand what management expects from the controls review, the concerns they want addressed, the people who will participate, and how unresolved matters should be escalated. I then meet with the Head of IT Applications to begin understanding the client's technology environment. I ask for the Landscape Diagram and System List, the Hosting and Data-Centre Details, and any other existing documents that explain the environment. I use this information to begin building the Landscape and System Inventory.",
       "sourceDocuments": [
         "Landscape Diagram and System List",
@@ -142,8 +142,8 @@
     },
     {
       "id": "lead-01",
-      "projectStage": "LEAD IT \u00b7 Module 01",
-      "title": "Module 1 \u2014 Taking Command of the Controls Project",
+      "projectStage": "LEAD IT · Take Command",
+      "title": "Module 1 — Taking Command of the Controls Project",
       "narrationTitle": "First-Person Leadership Narration",
       "narration": "It is Monday morning and I am now accountable for the controls project. My first mistake would be to start doing the team's work. Before I change anything, I need to understand what I have inherited.\n\nI begin with the sponsor. I confirm why the project exists, what management expects, what deadlines cannot move, what concerns already exist and which decisions are waiting for me. I do not accept a green status simply because someone tells me the project is green. I ask what evidence supports the status.\n\nNext I meet the team. I want to know who owns each workstream, what each person is working on, what is overdue, what is blocked and where the team believes the greatest risks are. I compare those answers with the project plan, the fourteen foundation artifacts, prior audit findings and the current evidence requests.\n\nBy the end of the first few days I should be able to separate four things: what is confirmed, what is incomplete, what is at risk and what requires a management decision. I am not trying to solve every problem myself. I am establishing control of the work.\n\nBy Friday I prepare my first management status. It tells the sponsor what I know, what I do not yet know, the immediate risks, the overdue items, the people responsible and the decisions I need. That is how I begin leading the controls project.",
       "sourceDocuments": [
@@ -182,8 +182,8 @@
     },
     {
       "id": "lead-02",
-      "projectStage": "LEAD IT \u00b7 Module 02",
-      "title": "Module 2 \u2014 Building and Managing the Controls Team",
+      "projectStage": "LEAD IT · Manage Team",
+      "title": "Module 2 — Building and Managing the Controls Team",
       "narrationTitle": "First-Person Leadership Narration",
       "narration": "I already know how the controls artifacts are built. My job now is to make sure the right people build them at the right time and to the right standard.\n\nI start with the deliverables, not with people's job titles. For each artifact I identify who is responsible for preparing it, who is accountable for accepting it, who must be consulted and who needs to be informed. I then look at effort, dependencies and deadlines.\n\nI do not delegate vaguely. I define the expected output, the source information, the due date, the review criteria and the point at which the person must escalate a problem. If an analyst owns the Risk Register, that does not mean I have abandoned the Risk Register. It means the analyst prepares it and I remain accountable for its quality.\n\nI also protect specialist time. The SAP Security specialist should not be used for administrative work that an analyst can perform. I use specialists where technical judgment is needed and analysts where structured evidence gathering, documentation and testing can be performed under supervision.\n\nThe result is a delivery model in which everyone knows what they own, what good looks like, when I will review it and what happens when the work falls behind.",
       "sourceDocuments": [
@@ -222,8 +222,8 @@
     },
     {
       "id": "lead-03",
-      "projectStage": "LEAD IT \u00b7 Module 03",
-      "title": "Module 3 \u2014 Reviewing and Approving Team Work",
+      "projectStage": "LEAD IT · Review Work",
+      "title": "Module 3 — Reviewing and Approving Team Work",
       "narrationTitle": "First-Person Leadership Narration",
       "narration": "A document can look complete and still be wrong. As Controls Lead, I need a repeatable way to review other people's work.\n\nI begin with completeness. Are the required fields, owners, populations, periods and conclusions present? Then I test accuracy. Does the work agree with the source evidence?\n\nNext I ask whether important statements are supported. If the workpaper says a quarterly review occurred, I need evidence that the review occurred for the correct quarter and population. I then check traceability. Can I move from the scoped process to the risk, from the risk to the control, from the control to the owner and evidence, and from the evidence to the test and conclusion?\n\nI check whether the control really addresses the risk. I check whether the evidence is sufficient and reliable. I check whether the test procedure actually proves the control objective. Finally, I ask whether the conclusion is defensible.\n\nMy choices are not simply pass or fail. I can approve the work, return it for correction, request more evidence or escalate an issue. The goal is not to redo the analyst's work. The goal is to know when the work is good enough to stand behind.",
       "sourceDocuments": [
@@ -238,7 +238,7 @@
         "Is it accurate and supported?",
         "Can I trace risk to control to evidence to test to conclusion?",
         "Would I defend this work to an auditor?",
-        "Approve, return, request evidence or escalate \u2014 and why?"
+        "Approve, return, request evidence or escalate — and why?"
       ],
       "nextActivity": "lead-04",
       "connect": {
@@ -272,8 +272,8 @@
     },
     {
       "id": "lead-04",
-      "projectStage": "LEAD IT \u00b7 Module 04",
-      "title": "Module 4 \u2014 SAP Technical Literacy for Controls Leaders",
+      "projectStage": "LEAD IT · Technical Challenge",
+      "title": "Module 4 — SAP Technical Literacy for Controls Leaders",
       "narrationTitle": "First-Person Leadership Narration",
       "narration": "I do not need to become the SAP Security administrator, Basis engineer or functional configurator. I do need enough technical understanding to recognize when an answer is incomplete.\n\nFor the landscape, I need to know which systems support the in-scope processes and where responsibility changes between the company, SAP and other providers. For access, I need to understand the user lifecycle, roles, approvals, privileged access and how access is removed.\n\nFor GRC, I need to understand SoD analysis, rulesets, mitigating controls, emergency access and review of privileged activity. For Fiori, I need to understand that what a user sees in the launchpad and what the backend authorizes are related but not identical.\n\nFor changes, I ask how a change moves from development through testing and approval into production. For interfaces and jobs, I ask what happens when processing fails and how completeness is monitored. For reports used in controls, I ask how the population is proven complete and accurate. For RISE and cloud services, I ask which responsibilities remain with the customer.\n\nMy most useful technical phrase is often simple: show me. Show me the approval. Show me the role. Show me the log. Show me the reconciliation. Show me what happens when it fails. I use technical literacy to ask better questions, not to pretend I am the specialist.",
       "sourceDocuments": [
@@ -334,8 +334,8 @@
     },
     {
       "id": "lead-05",
-      "projectStage": "LEAD IT \u00b7 Module 05",
-      "title": "Module 5 \u2014 Managing Internal and External Audit",
+      "projectStage": "LEAD IT · Manage Audit",
+      "title": "Module 5 — Managing Internal and External Audit",
       "narrationTitle": "First-Person Leadership Narration",
       "narration": "An audit request is not complete because someone attached a file. Before evidence leaves the controls team, I need to know that it answers the request and supports the control.\n\nI log each request, assign an internal owner, confirm the due date and identify what the auditor is actually trying to prove. When evidence arrives, the team performs quality review before submission. If the evidence is wrong, incomplete or for the wrong period, I return it internally rather than sending a weak package to the auditor.\n\nWhen the auditor asks a follow-up question, I separate a request for clarification from a genuine control exception. If management disagrees with an auditor conclusion, I bring the discussion back to the control objective, the evidence and the facts.\n\nI also manage the relationship. I do not hide problems, and I do not concede unsupported conclusions. I communicate early when deadlines are at risk. I keep an audit trail of what was requested, what was submitted, what was questioned and how the matter was resolved.\n\nMy role is to make the audit process controlled, factual and efficient.",
       "sourceDocuments": [
@@ -380,8 +380,8 @@
     },
     {
       "id": "lead-06",
-      "projectStage": "LEAD IT \u00b7 Module 06",
-      "title": "Module 6 \u2014 Deficiencies, Remediation and Risk Decisions",
+      "projectStage": "LEAD IT · Remediation",
+      "title": "Module 6 — Deficiencies, Remediation and Risk Decisions",
       "narrationTitle": "First-Person Leadership Narration",
       "narration": "Finding an exception is only the beginning. I need to understand what failed, why it failed and what risk that failure creates.\n\nI first connect the issue back to the control objective and the underlying risk. I determine whether the exception is isolated or whether it indicates a broader problem. I look for root cause rather than accepting a superficial explanation.\n\nIf a compensating control exists, I ask whether it genuinely reduces the same risk and whether it operated effectively. I identify the remediation owner, the action required and a realistic target date. I also decide who needs to know now rather than waiting for the next status meeting.\n\nA remediation item is not closed because management says it is fixed. The change must be implemented and, where appropriate, retested. Closure evidence must support the conclusion.\n\nMy responsibility is to make sure deficiencies become managed decisions rather than entries that sit indefinitely in a spreadsheet.",
       "sourceDocuments": [
@@ -430,8 +430,8 @@
     },
     {
       "id": "lead-07",
-      "projectStage": "LEAD IT \u00b7 Module 07",
-      "title": "Module 7 \u2014 Executive Communication and Governance",
+      "projectStage": "LEAD IT · Executive Governance",
+      "title": "Module 7 — Executive Communication and Governance",
       "narrationTitle": "First-Person Leadership Narration",
       "narration": "Executives do not need me to read the workpapers to them. They need to know whether the controls program is under control, where the important risks are and what decisions they need to make.\n\nI reduce the detail into a small number of management measures: scope confirmation, control coverage, testing progress, overdue evidence, significant deficiencies, remediation status and decisions required.\n\nFor every major issue I answer the same questions. What happened? Why does it matter? What are we doing about it? Who owns the action? When will it be resolved? What decision or support do I need?\n\nI also change my language for the audience. With an analyst I can discuss detailed testing steps. With a control owner I focus on the business risk and the action required. With the CFO or CIO I focus on exposure, impact, accountability, timing and decisions.\n\nGood executive communication is not removing important information. It is organizing the important information so management can act.",
       "sourceDocuments": [
@@ -480,8 +480,8 @@
     },
     {
       "id": "lead-08",
-      "projectStage": "LEAD IT \u00b7 Module 08",
-      "title": "Module 8 \u2014 First 30 Days as Controls Lead or Manager \u2014 Capstone",
+      "projectStage": "LEAD IT · 30-Day Capstone",
+      "title": "Module 8 — First 30 Days as Controls Lead or Manager — Capstone",
       "narrationTitle": "First-Person Leadership Narration",
       "narration": "This capstone is different from the foundation course. I am no longer being tested on whether I can personally complete every workbook. I am being tested on whether I can take accountability for the program.\n\nDuring Week One I take control. I meet the sponsor and team, assess the fourteen artifacts, review prior findings, establish governance, build the RACI and issue assignments. By Friday I must give management a reliable status.\n\nDuring Week Two I direct and challenge. I review analyst work, question SAP specialists, resolve evidence problems, manage auditor requests and adjust resources when work falls behind.\n\nDuring Week Three I review and decide. I assess testing results, reject weak workpapers, evaluate deficiencies, meet control owners, agree remediation and escalate important risks.\n\nDuring Week Four I govern and lead. I finalize the executive dashboard, run the remediation and steering meetings, present the thirty-day assessment and propose the sixty- and ninety-day roadmap.\n\nThe standard is simple. Can I explain what is happening, prove the status, assign the right people, detect weak work, make defensible decisions and take accountability for the outcome? That is the transition from building the controls project to leading it.",
       "sourceDocuments": [
