@@ -52,6 +52,8 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
 .notice{border:1px solid #f0d58a;background:#fff9e8;border-radius:10px;padding:10px 12px;margin:10px 0}
 @media(max-width:980px){.layout{grid-template-columns:1fr!important}.left,.right{display:none}.main{min-width:0}}
 </style><script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx-preview@0.3.6/dist/docx-preview.min.js"></script>
 </head>
 <body>
 <header><div><div class="brand">TIB ACADEMY</div><small>INTERACTIVE LEARNING</small></div><div class="spacer"></div><span class="userChip" id="userChip">Not signed in</span><a class="adminLink" href="content-admin.html">Content Admin</a><a class="adminLink" href="#" onclick="sb.auth.signOut();location.reload();return false">Sign Out</a></header>
@@ -207,15 +209,41 @@ async function openMaterial(index){
      const response=await fetch(currentViewerUrl);
      if(!response.ok)throw new Error('The document could not be retrieved.');
      const buffer=await response.arrayBuffer();
-     const result=await mammoth.convertToHtml({arrayBuffer:buffer});
-     viewerBody.innerHTML=`<div class="docxView"><article class="docxPaper">${result.value}</article></div>`;
+
+     // Primary renderer: docx-preview. It renders WordprocessingML directly and
+     // is more tolerant of complex Word documents/tables than HTML conversion.
+     viewerBody.innerHTML='<div id="docxPreviewHost" class="docxPreviewHost"></div>';
+     const host=document.getElementById('docxPreviewHost');
+     try{
+       if(!window.docx || typeof window.docx.renderAsync!=='function') throw new Error('Word viewer library did not load.');
+       await window.docx.renderAsync(buffer,host,null,{
+         className:'docx',
+         inWrapper:true,
+         ignoreWidth:false,
+         ignoreHeight:false,
+         ignoreFonts:false,
+         breakPages:true,
+         renderHeaders:true,
+         renderFooters:true,
+         renderFootnotes:true
+       });
+     }catch(primaryError){
+       // Secondary renderer. Some DOCX files contain malformed/custom XML that
+       // can upset an XML-to-HTML converter, so failure here is handled cleanly.
+       try{
+         const result=await mammoth.convertToHtml({arrayBuffer:buffer});
+         viewerBody.innerHTML=`<div class="docxView"><article class="docxPaper">${result.value}</article></div>`;
+       }catch(secondaryError){
+         throw new Error('This Word file contains document XML that the browser viewer cannot safely render. Use Download Original while TIB replaces/repairs this source document.');
+       }
+     }
    }else if(['pdf','png','jpg','jpeg','webp','gif','txt'].includes(ext)){
      viewerBody.innerHTML=`<iframe class="viewerFrame" src="${currentViewerUrl}" title="${esc(m.title)}"></iframe>`;
    }else{
      viewerBody.innerHTML=`<div class="viewerFallback"><div class="fileCard"><div class="kicker">TIB COURSE MATERIAL</div><h2>${esc(m.title)}</h2><p class="body"><b>${esc(m.filename)}</b></p><p>This file should be opened in its original application. Select <b>Download Original</b> above.</p></div></div>`;
    }
  }catch(e){
-   viewerBody.innerHTML=`<div class="viewerError"><h2>Document could not be displayed</h2><p>${esc(e.message||'Viewer error')}</p><p>Select <b>Download Original</b> to use the original file.</p></div>`;
+   viewerBody.innerHTML=`<div class="viewerError"><h2>We could not display this document inside TIB ILA</h2><p>${esc(e.message||'The browser viewer could not open this file.')}</p><p>You can select <b>Download Original</b>, or use <b>← Back to Course</b> to continue.</p></div>`;
  }
 }
 function closeViewer(){
