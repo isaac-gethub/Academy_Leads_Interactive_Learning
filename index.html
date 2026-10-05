@@ -37,7 +37,7 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
 .viewer{position:fixed;inset:0;z-index:120;background:#eef2f6;display:none;flex-direction:column}
 .viewerHead{height:58px;background:#122a4a;color:#fff;display:flex;align-items:center;gap:10px;padding:0 14px}
 .viewerHead b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.viewerHead .spacer{flex:1}
-.viewerBody{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr)}
+.viewerBody{flex:1;min-height:0;display:block;overflow:auto;overscroll-behavior:contain}
 .viewerFrame{width:100%;height:100%;border:0;background:#fff}
 .viewerFallback{padding:24px;overflow:auto;background:#fff;height:100%}
 .viewerFallback .fileCard{max-width:900px;margin:auto;border:1px solid #d9e2ea;border-radius:14px;padding:22px}
@@ -61,7 +61,7 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
 <body>
 <header><div><div class="brand">TIB ACADEMY</div><small>INTERACTIVE LEARNING</small></div><div class="spacer"></div><span class="userChip" id="userChip">Not signed in</span><button class="refBtn" onclick="openCorvaneReference()">Corvane Project Reference</button><button class="refBtn" onclick="openSampleDocumentLibrary()">Sample Documents</button><a class="adminLink" href="content-admin.html">Content Admin</a><a class="adminLink" href="#" onclick="sb.auth.signOut();location.reload();return false">Sign Out</a></header>
 <div class="viewer" id="viewer">
- <div class="viewerHead"><button class="viewerBack" onclick="courseHome()">← Course Home</button><b id="viewerTitle">Document Viewer</b><div class="spacer"></div>
+ <div class="viewerHead"><button class="viewerBack" onclick="courseHome()">← Course Home</button><button class="viewerBack" id="libraryBackBtn" onclick="openSampleDocumentLibrary()" style="display:none">← Sample Library</button><b id="viewerTitle">Document Viewer</b><div class="spacer"></div>
  <div class="viewerActions"><button class="viewerBtn" onclick="downloadViewerOriginal()">Download Original</button><button class="viewerBtn" onclick="viewerFullscreen()">Full Screen</button><button class="viewerBtn" onclick="closeViewer()">Close</button></div></div>
  <div class="viewerBody" id="viewerBody"></div>
 </div><div id="authGate">
@@ -283,14 +283,16 @@ async function renderXlsxInline(buffer){
 
 
 const CORVANE_SAMPLE_DOCUMENTS=[{"title":"01 Landscape and System Overview","filename":"sample-01-landscape.docx","path":"sample-01-landscape.docx"},{"title":"02 Hosting and Data Centre Details","filename":"sample-02-hosting.docx","path":"sample-02-hosting.docx"},{"title":"03 Transport and Change Management Procedure","filename":"sample-03-change.docx","path":"sample-03-change.docx"},{"title":"04 Interface List and Integration Design","filename":"sample-04-interfaces.docx","path":"sample-04-interfaces.docx"},{"title":"05 Organisation and Process Owner List","filename":"sample-05-owners.docx","path":"sample-05-owners.docx"},{"title":"06 Process Narrative P2P","filename":"sample-06-p2p.docx","path":"sample-06-p2p.docx"},{"title":"07 Access Management and Leaver Procedure","filename":"sample-07-access.docx","path":"sample-07-access.docx"},{"title":"08 Emergency Access Procedure","filename":"sample-08-firefighter.docx","path":"sample-08-firefighter.docx"},{"title":"09 Job and Interface Monitoring Procedure","filename":"sample-09-monitoring.docx","path":"sample-09-monitoring.docx"},{"title":"10 Backup and Recovery Policy","filename":"sample-10-backup.docx","path":"sample-10-backup.docx"},{"title":"11 Financial Close and Journal Policy","filename":"sample-11-close.docx","path":"sample-11-close.docx"},{"title":"12 Service Provider Assurance Review","filename":"sample-12-provider.docx","path":"sample-12-provider.docx"},{"title":"13 Trial Balance and Chart of Accounts","filename":"sample-13-tb-coa.xlsx","path":"sample-13-tb-coa.xlsx"},{"title":"14 Existing Risk and Control Matrix","filename":"sample-14-rcm.xlsx","path":"sample-14-rcm.xlsx"},{"title":"15 Prior Year Testing","filename":"sample-15-testing.xlsx","path":"sample-15-testing.xlsx"},{"title":"16 Prior Year Findings","filename":"sample-16-findings.xlsx","path":"sample-16-findings.xlsx"},{"title":"17 SoD Rules and Mitigations","filename":"sample-17-sod.xlsx","path":"sample-17-sod.xlsx"},{"title":"18 Key Report Inventory","filename":"sample-18-reports.xlsx","path":"sample-18-reports.xlsx"},{"title":"19 Materiality and Audit Scoping","filename":"sample-19-scoping.xlsx","path":"sample-19-scoping.xlsx"},{"title":"20 Close Calendar and Key People","filename":"sample-20-calendar.xlsx","path":"sample-20-calendar.xlsx"},{"title":"21 Evidence Request and Index","filename":"sample-21-evidence.xlsx","path":"sample-21-evidence.xlsx"},{"title":"22 Test Workpaper and Sample Log","filename":"sample-22-workpaper.xlsx","path":"sample-22-workpaper.xlsx"}];
+function showLibraryBack(show){const b=document.getElementById('libraryBackBtn');if(b)b.style.display=show?'inline-block':'none';}
 function openSampleDocumentLibrary(){
+ showLibraryBack(false);
  currentViewerUrl='sample-00-index.xlsx'; currentViewerMaterial={title:'Corvane Sample Document Library',filename:'sample-00-index.xlsx'};
  viewerTitle.textContent='Corvane Sample Document Library'; viewer.style.display='flex';
  const cards=CORVANE_SAMPLE_DOCUMENTS.map((m,i)=>`<div class="fileCard"><div class="kicker">CORVANE TRAINING SAMPLE</div><h3>${esc(m.title)}</h3><p>${esc(m.filename)}</p><button onclick="openLocalSample(${i})">Open Sample</button></div>`).join('');
- viewerBody.innerHTML=`<div class="docxView"><article class="docxPaper"><h1>Corvane Sample Document Library</h1><p>Original fictitious TIB client documents showing what common controls-project inputs and workpapers can look like.</p><p><button onclick="openLocalNamed('sample-00-sources.xlsx','Real-World Source Map')">Real-World Source Map</button> <button onclick="openLocalNamed('sample-00-index.xlsx','Sample Library Index')">Library Index</button></p><div class="materialsGrid">${cards}</div></article></div>`;
+ viewerBody.innerHTML=`<div style="padding:18px 20px 48px;max-width:1200px;margin:0 auto;"><h1>Corvane Sample Document Library</h1><p>Original fictitious TIB client documents showing what common controls-project inputs and workpapers can look like.</p><p><button onclick="openLocalNamed('sample-00-sources.xlsx','Real-World Source Map')">Real-World Source Map</button> <button onclick="openLocalNamed('sample-00-index.xlsx','Sample Library Index')">Library Index</button></p><div class="materialsGrid">${cards}</div><p style="margin-top:30px"><button onclick="courseHome()">← Course Home</button></p></div>`;
 }
-async function openLocalNamed(path,title){currentViewerUrl=path;currentViewerMaterial={title,filename:path.split('/').pop()};viewerTitle.textContent=title;await renderLocalFile(path,title);}
-async function openLocalSample(i){const m=CORVANE_SAMPLE_DOCUMENTS[i];if(!m)return;currentViewerUrl=m.path;currentViewerMaterial={title:m.title,filename:m.filename};viewerTitle.textContent=m.title;await renderLocalFile(m.path,m.title);}
+async function openLocalNamed(path,title){showLibraryBack(true);currentViewerUrl=path;currentViewerMaterial={title,filename:path.split('/').pop()};viewerTitle.textContent=title;await renderLocalFile(path,title);}
+async function openLocalSample(i){showLibraryBack(true);const m=CORVANE_SAMPLE_DOCUMENTS[i];if(!m)return;currentViewerUrl=m.path;currentViewerMaterial={title:m.title,filename:m.filename};viewerTitle.textContent=m.title;await renderLocalFile(m.path,m.title);}
 async function renderLocalFile(path,title){
  viewer.style.display='flex';viewerBody.innerHTML='<div class="viewerLoading"><b>Opening sample document…</b></div>';
  try{const ext=path.split('.').pop().toLowerCase();const response=await fetch(path);if(!response.ok)throw new Error('The sample document could not be retrieved.');const buffer=await response.arrayBuffer();
@@ -300,6 +302,7 @@ async function renderLocalFile(path,title){
 }
 
 async function openCorvaneReference(){
+ showLibraryBack(false);
  const filename='corvane-reference.xlsx';
  currentViewerUrl=filename;
  currentViewerMaterial={title:'Corvane Project Reference',filename};
@@ -321,6 +324,7 @@ async function openCorvaneReference(){
 }
 
 async function openMaterial(index){
+ showLibraryBack(false);
  const m=(window.courseMaterials||[])[index]; if(!m||!m.storage_path)return;
  const {data,error}=await sb.storage.from(MATERIALS_BUCKET).createSignedUrl(m.storage_path,1800);
  if(error)return alert('Unable to open this course material: '+error.message);
@@ -380,6 +384,7 @@ async function openMaterial(index){
 }
 function courseHome(){ closeViewer(); window.scrollTo({top:0,behavior:'smooth'}); }
 function closeViewer(){
+ showLibraryBack(false);
  viewer.style.display='none';viewerBody.innerHTML='';
  // Course remains exactly where the trainee left it (for example Environment · OBSERVE).
 }
