@@ -153,7 +153,7 @@ const THEORY_REFS={
  'lead-07':[['B9','AI in Controls','foundation-b9.html']],
  'lead-08':[['B10','Practitioner Capstone','foundation-b10.html']]
 };
-function openFoundation(){showLibraryBack(false);currentViewerUrl='foundation.html';currentViewerMaterial={title:'FOUNDATION · Controls Theory',filename:'foundation.html'};viewerTitle.textContent='FOUNDATION · Controls Theory';viewerBody.innerHTML='<iframe src="foundation.html" style="width:100%;height:100%;min-height:78vh;border:0;background:#fff"></iframe>';viewer.classList.add('open');}
+function openFoundation(){showLibraryBack(false);currentViewerUrl='foundation.html';currentViewerMaterial={title:'FOUNDATION · Controls Theory',filename:'foundation.html'};viewerTitle.textContent='FOUNDATION · Controls Theory';viewerBody.innerHTML='<iframe src="foundation.html" style="width:100%;height:100%;min-height:78vh;border:0;background:#fff"></iframe>';viewer.style.display='flex';viewer.classList.add('open');}
 function theoryReferenceCards(a){const xs=THEORY_REFS[a.id]||[];if(!xs.length)return '';return `<div style="margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#f8fafc"><b style="color:var(--navy)">Theory Reference</b><div class="docs" style="margin-top:8px">${xs.map(x=>`<div class="doc"><b>${x[0]} — ${x[1]}</b><button class="btn" style="float:right;padding:6px 9px" onclick="openEnhancement('${x[2]}','${x[0]} — ${x[1]}')">Open</button></div>`).join('')}</div></div>`;}
 
 function enhancementCards(a){
