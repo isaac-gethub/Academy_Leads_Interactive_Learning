@@ -1,0 +1,15 @@
+TIB ILA — FLAT GITHUB DEPLOYMENT
+
+This production package intentionally contains NO subfolders.
+
+1. Extract the ZIP.
+2. Open the extracted folder.
+3. Select ALL files inside the folder. Do not upload the ZIP itself.
+4. In the SAME GitHub repository currently connected to Vercel, choose Add file > Upload files.
+5. Drag all selected files into the GitHub upload page. Every file must appear at repository root beside index.html.
+6. Commit the changes.
+7. Confirm there is NO sample-documents folder and that files 01_... through 22_... appear beside index.html.
+8. Allow Vercel to redeploy from the commit.
+9. Test Corvane Project Reference, Sample Documents, one DOCX sample, one XLSX sample, and Course Home.
+
+IMPORTANT: The filenames must not be renamed. index.html now points directly to the root filenames.
