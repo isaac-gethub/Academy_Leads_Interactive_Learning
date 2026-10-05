@@ -196,6 +196,60 @@ async function nextActivity(){
 }
 
 let currentViewerUrl='',currentViewerMaterial=null;
+
+function xmlTextDecode(v){
+ const ta=document.createElement('textarea');
+ ta.innerHTML=String(v||'').replace(/&apos;/g,"&#39;");
+ return ta.value;
+}
+function extractRunsNoParser(xml){
+ return [...String(xml||'').matchAll(/<w:t(?:\s[^>]*)?>([\s\S]*?)<\/w:t>/g)]
+   .map(m=>xmlTextDecode(m[1].replace(/<[^>]+>/g,''))).join('');
+}
+async function renderDocxSafeFallback(buffer,host){
+ // Last-resort reader intentionally avoids DOM/XML parsers. This allows TIB ILA
+ // to display readable Word content even when malformed custom XML breaks normal renderers.
+ const zip=await JSZip.loadAsync(buffer);
+ const entry=zip.file('word/document.xml');
+ if(!entry)throw new Error('The Word document package does not contain word/document.xml.');
+ const xml=await entry.async('string');
+ const body=(xml.match(/<w:body[\s\S]*?<\/w:body>/)||[xml])[0];
+ const blocks=[];
+ const tokenRe=/<w:tbl[\s\S]*?<\/w:tbl>|<w:p(?:\s[^>]*)?>[\s\S]*?<\/w:p>/g;
+ let m;
+ while((m=tokenRe.exec(body))){
+   const b=m[0];
+   if(b.startsWith('<w:tbl')){
+     const rows=[];
+     for(const rm of b.matchAll(/<w:tr(?:\s[^>]*)?>[\s\S]*?<\/w:tr>/g)){
+       const cells=[];
+       for(const cm of rm[0].matchAll(/<w:tc(?:\s[^>]*)?>[\s\S]*?<\/w:tc>/g)){
+         cells.push(extractRunsNoParser(cm[0]));
+       }
+       if(cells.length)rows.push(cells);
+     }
+     if(rows.length){
+       const table=document.createElement('table');
+       rows.forEach(row=>{
+         const tr=document.createElement('tr');
+         row.forEach(val=>{const td=document.createElement('td');td.textContent=val;tr.appendChild(td)});
+         table.appendChild(tr);
+       });
+       blocks.push(table);
+     }
+   }else{
+     const txt=extractRunsNoParser(b);
+     if(txt.trim()){const para=document.createElement('p');para.textContent=txt;blocks.push(para)}
+   }
+ }
+ host.innerHTML='';
+ const note=document.createElement('div');note.className='safeNote';
+ note.textContent='TIB ILA recovered this document in reading mode because the original Word file contains formatting XML that the standard browser viewer could not process. The original file remains available from Download Original.';
+ host.appendChild(note);
+ blocks.forEach(x=>host.appendChild(x));
+ if(!blocks.length)throw new Error('No readable Word content could be recovered.');
+}
+
 async function openMaterial(index){
  const m=(window.courseMaterials||[])[index]; if(!m||!m.storage_path)return;
  const {data,error}=await sb.storage.from(MATERIALS_BUCKET).createSignedUrl(m.storage_path,1800);
@@ -234,7 +288,10 @@ async function openMaterial(index){
          const result=await mammoth.convertToHtml({arrayBuffer:buffer});
          viewerBody.innerHTML=`<div class="docxView"><article class="docxPaper">${result.value}</article></div>`;
        }catch(secondaryError){
-         throw new Error('This Word file contains document XML that the browser viewer cannot safely render. Use Download Original while TIB replaces/repairs this source document.');
+         // Third renderer: safe reading-mode extraction. It never parses Word XML as DOM,
+         // so malformed custom XML/tag names cannot trigger the previous parser failure.
+         viewerBody.innerHTML='<div class="safeDocx"><article id="safeDocxPaper" class="safeDocxPaper"></article></div>';
+         await renderDocxSafeFallback(buffer,document.getElementById('safeDocxPaper'));
        }
      }
    }else if(['pdf','png','jpg','jpeg','webp','gif','txt'].includes(ext)){
@@ -243,7 +300,7 @@ async function openMaterial(index){
      viewerBody.innerHTML=`<div class="viewerFallback"><div class="fileCard"><div class="kicker">TIB COURSE MATERIAL</div><h2>${esc(m.title)}</h2><p class="body"><b>${esc(m.filename)}</b></p><p>This file should be opened in its original application. Select <b>Download Original</b> above.</p></div></div>`;
    }
  }catch(e){
-   viewerBody.innerHTML=`<div class="viewerError"><h2>We could not display this document inside TIB ILA</h2><p>${esc(e.message||'The browser viewer could not open this file.')}</p><p>You can select <b>Download Original</b>, or use <b>← Back to Course</b> to continue.</p></div>`;
+   viewerBody.innerHTML=`<div class="viewerError"><h2>This document could not be opened</h2><p>${esc(e.message||'The browser viewer could not open this file.')}</p><p>Select <b>Download Original</b> to open the source file, or <b>← Back to Course</b> to continue.</p></div>`;
  }
 }
 function closeViewer(){
