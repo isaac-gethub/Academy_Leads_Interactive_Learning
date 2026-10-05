@@ -1,0 +1,126 @@
+{
+  "title": "Corvane Sample Document Library",
+  "description": "Realistic fictitious client documents for the TIB Controls Lead fieldwork simulation.",
+  "files": [
+    {
+      "title": "00 REAL WORLD SOURCE MAP",
+      "filename": "00_REAL_WORLD_SOURCE_MAP.xlsx",
+      "path": "sample-documents/00_REAL_WORLD_SOURCE_MAP.xlsx"
+    },
+    {
+      "title": "00 SAMPLE DOCUMENT LIBRARY INDEX",
+      "filename": "00_SAMPLE_DOCUMENT_LIBRARY_INDEX.xlsx",
+      "path": "sample-documents/00_SAMPLE_DOCUMENT_LIBRARY_INDEX.xlsx"
+    },
+    {
+      "title": "01 Landscape and System Overview",
+      "filename": "01_Landscape_and_System_Overview.docx",
+      "path": "sample-documents/01_Landscape_and_System_Overview.docx"
+    },
+    {
+      "title": "02 Hosting and Data Centre Details",
+      "filename": "02_Hosting_and_Data_Centre_Details.docx",
+      "path": "sample-documents/02_Hosting_and_Data_Centre_Details.docx"
+    },
+    {
+      "title": "03 Transport and Change Management Procedure",
+      "filename": "03_Transport_and_Change_Management_Procedure.docx",
+      "path": "sample-documents/03_Transport_and_Change_Management_Procedure.docx"
+    },
+    {
+      "title": "04 Interface List and Integration Design",
+      "filename": "04_Interface_List_and_Integration_Design.docx",
+      "path": "sample-documents/04_Interface_List_and_Integration_Design.docx"
+    },
+    {
+      "title": "05 Organisation and Process Owner List",
+      "filename": "05_Organisation_and_Process_Owner_List.docx",
+      "path": "sample-documents/05_Organisation_and_Process_Owner_List.docx"
+    },
+    {
+      "title": "06 Process Narrative P2P",
+      "filename": "06_Process_Narrative_P2P.docx",
+      "path": "sample-documents/06_Process_Narrative_P2P.docx"
+    },
+    {
+      "title": "07 Access Management and Leaver Procedure",
+      "filename": "07_Access_Management_and_Leaver_Procedure.docx",
+      "path": "sample-documents/07_Access_Management_and_Leaver_Procedure.docx"
+    },
+    {
+      "title": "08 Emergency Access Procedure",
+      "filename": "08_Emergency_Access_Procedure.docx",
+      "path": "sample-documents/08_Emergency_Access_Procedure.docx"
+    },
+    {
+      "title": "09 Job and Interface Monitoring Procedure",
+      "filename": "09_Job_and_Interface_Monitoring_Procedure.docx",
+      "path": "sample-documents/09_Job_and_Interface_Monitoring_Procedure.docx"
+    },
+    {
+      "title": "10 Backup and Recovery Policy",
+      "filename": "10_Backup_and_Recovery_Policy.docx",
+      "path": "sample-documents/10_Backup_and_Recovery_Policy.docx"
+    },
+    {
+      "title": "11 Financial Close and Journal Policy",
+      "filename": "11_Financial_Close_and_Journal_Policy.docx",
+      "path": "sample-documents/11_Financial_Close_and_Journal_Policy.docx"
+    },
+    {
+      "title": "12 Service Provider Assurance Review",
+      "filename": "12_Service_Provider_Assurance_Review.docx",
+      "path": "sample-documents/12_Service_Provider_Assurance_Review.docx"
+    },
+    {
+      "title": "13 Trial Balance and Chart of Accounts",
+      "filename": "13_Trial_Balance_and_Chart_of_Accounts.xlsx",
+      "path": "sample-documents/13_Trial_Balance_and_Chart_of_Accounts.xlsx"
+    },
+    {
+      "title": "14 Existing Risk and Control Matrix",
+      "filename": "14_Existing_Risk_and_Control_Matrix.xlsx",
+      "path": "sample-documents/14_Existing_Risk_and_Control_Matrix.xlsx"
+    },
+    {
+      "title": "15 Prior Year Testing",
+      "filename": "15_Prior_Year_Testing.xlsx",
+      "path": "sample-documents/15_Prior_Year_Testing.xlsx"
+    },
+    {
+      "title": "16 Prior Year Findings",
+      "filename": "16_Prior_Year_Findings.xlsx",
+      "path": "sample-documents/16_Prior_Year_Findings.xlsx"
+    },
+    {
+      "title": "17 SoD Rules and Mitigations",
+      "filename": "17_SoD_Rules_and_Mitigations.xlsx",
+      "path": "sample-documents/17_SoD_Rules_and_Mitigations.xlsx"
+    },
+    {
+      "title": "18 Key Report Inventory",
+      "filename": "18_Key_Report_Inventory.xlsx",
+      "path": "sample-documents/18_Key_Report_Inventory.xlsx"
+    },
+    {
+      "title": "19 Materiality and Audit Scoping",
+      "filename": "19_Materiality_and_Audit_Scoping.xlsx",
+      "path": "sample-documents/19_Materiality_and_Audit_Scoping.xlsx"
+    },
+    {
+      "title": "20 Close Calendar and Key People",
+      "filename": "20_Close_Calendar_and_Key_People.xlsx",
+      "path": "sample-documents/20_Close_Calendar_and_Key_People.xlsx"
+    },
+    {
+      "title": "21 Evidence Request and Index",
+      "filename": "21_Evidence_Request_and_Index.xlsx",
+      "path": "sample-documents/21_Evidence_Request_and_Index.xlsx"
+    },
+    {
+      "title": "22 Test Workpaper and Sample Log",
+      "filename": "22_Test_Workpaper_and_Sample_Log.xlsx",
+      "path": "sample-documents/22_Test_Workpaper_and_Sample_Log.xlsx"
+    }
+  ]
+}
