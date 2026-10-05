@@ -51,12 +51,13 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
 .releaseTag{font-size:11px;font-weight:900;letter-spacing:.08em;opacity:.75}
 .notice{border:1px solid #f0d58a;background:#fff9e8;border-radius:10px;padding:10px 12px;margin:10px 0}
 @media(max-width:980px){.layout{grid-template-columns:1fr!important}.left,.right{display:none}.main{min-width:0}}
-</style></head>
+</style><script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+</head>
 <body>
 <header><div><div class="brand">TIB ACADEMY</div><small>INTERACTIVE LEARNING</small></div><div class="spacer"></div><span class="userChip" id="userChip">Not signed in</span><a class="adminLink" href="content-admin.html">Content Admin</a><a class="adminLink" href="#" onclick="sb.auth.signOut();location.reload();return false">Sign Out</a></header>
 <div class="viewer" id="viewer">
- <div class="viewerHead"><b id="viewerTitle">Document Viewer</b><div class="spacer"></div>
- <div class="viewerActions"><button class="viewerBtn" onclick="openViewerExternal()">Open Original</button><button class="viewerBtn" onclick="viewerFullscreen()">Full Screen</button><button class="viewerBtn" onclick="closeViewer()">Close</button></div></div>
+ <div class="viewerHead"><button class="viewerBack" onclick="closeViewer()">← Back to Course</button><b id="viewerTitle">Document Viewer</b><div class="spacer"></div>
+ <div class="viewerActions"><button class="viewerBtn" onclick="downloadViewerOriginal()">Download Original</button><button class="viewerBtn" onclick="viewerFullscreen()">Full Screen</button><button class="viewerBtn" onclick="closeViewer()">Close</button></div></div>
  <div class="viewerBody" id="viewerBody"></div>
 </div><div id="authGate">
 <div class="authCard">
@@ -155,7 +156,7 @@ function renderStage(a){
  let pref=((window.activityMaterialMap.activity_mapping||{})[a.id]||{}).preferred||[];
  let mapped=(window.courseMaterials||[]).map((m,i)=>({...m,_idx:i})).filter(m=>pref.includes(m.title));
  let cards=mapped.map(m=>`<div class="doc"><b>${m.title}</b><br><span class="muted">${m.filename}</span><button class="btn" style="float:right;padding:6px 9px" onclick="openMaterial(${m._idx})">SHOW ME</button></div>`).join('');
- content.innerHTML=`<div class="kicker">OBSERVE · REAL TIB MATERIALS</div><h2>Now Look at the Work Products</h2><p class="body">Open the materials mapped to this project activity. Browser-readable files open inside the expanded TIB viewer; Word and Excel originals open securely in their native viewer.</p><div class="docs">${cards||'<div class="doc">No real artifact has been mapped to this activity yet.</div>'}</div><div class="flow">The main learning area now receives the full display width. Wide tables are not forced into a narrow reading column.</div>`;
+ content.innerHTML=`<div class="kicker">OBSERVE · REAL TIB MATERIALS</div><h2>Now Look at the Work Products</h2><p class="body">Open the materials mapped to this project activity. Open the materials mapped to this project activity. Word documents now open directly inside TIB ILA; original files remain available when you need them.</p><div class="docs">${cards||'<div class="doc">No real artifact has been mapped to this activity yet.</div>'}</div><div class="flow">Use the full learning area to review the project material before continuing.</div>`;
 }
  if(si===3){
  let docs=(a.sourceDocuments||[]).map(x=>`<div class="doc">▤ ${x}</div>`).join('');
@@ -200,18 +201,37 @@ async function openMaterial(index){
  currentViewerUrl=data.signedUrl;currentViewerMaterial=m;viewerTitle.textContent=m.title;
  const ext=(m.filename||'').split('.').pop().toLowerCase();
  viewer.style.display='flex';
- // Browsers render PDF/images/text well. Office files need a conversion/preview service for faithful inline rendering,
- // so this release provides a large clean viewer state plus original-file access rather than pretending iframe support.
- if(['pdf','png','jpg','jpeg','webp','gif','txt'].includes(ext)){
-   viewerBody.innerHTML=`<iframe class="viewerFrame" src="${currentViewerUrl}"></iframe>`;
- }else{
-   viewerBody.innerHTML=`<div class="viewerFallback"><div class="fileCard"><div class="kicker">TIB COURSE MATERIAL</div><h2>${m.title}</h2><p class="body"><b>${m.filename}</b></p><p>This is an original Microsoft Office training artifact stored securely in TIB Academy. Use <b>Open Original</b> to view it in the device's native Office/Excel application. The production viewer is deliberately full-width so converted previews can use the entire learning area without the blank side column or overlapping tables.</p><div class="flow">Viewer rule: preserve the original document. Do not squeeze wide Excel tables into a narrow page.</div><p class="wideHint">Batch 13 supports native inline preview for browser-renderable formats and secure original-file access for Word/Excel.</p></div></div>`;
+ viewerBody.innerHTML='<div class="viewerLoading"><b>Opening course material…</b></div>';
+ try{
+   if(ext==='docx'){
+     const response=await fetch(currentViewerUrl);
+     if(!response.ok)throw new Error('The document could not be retrieved.');
+     const buffer=await response.arrayBuffer();
+     const result=await mammoth.convertToHtml({arrayBuffer:buffer});
+     viewerBody.innerHTML=`<div class="docxView"><article class="docxPaper">${result.value}</article></div>`;
+   }else if(['pdf','png','jpg','jpeg','webp','gif','txt'].includes(ext)){
+     viewerBody.innerHTML=`<iframe class="viewerFrame" src="${currentViewerUrl}" title="${esc(m.title)}"></iframe>`;
+   }else{
+     viewerBody.innerHTML=`<div class="viewerFallback"><div class="fileCard"><div class="kicker">TIB COURSE MATERIAL</div><h2>${esc(m.title)}</h2><p class="body"><b>${esc(m.filename)}</b></p><p>This file should be opened in its original application. Select <b>Download Original</b> above.</p></div></div>`;
+   }
+ }catch(e){
+   viewerBody.innerHTML=`<div class="viewerError"><h2>Document could not be displayed</h2><p>${esc(e.message||'Viewer error')}</p><p>Select <b>Download Original</b> to use the original file.</p></div>`;
  }
 }
-function closeViewer(){viewer.style.display='none';viewerBody.innerHTML=''}
-function openViewerExternal(){if(currentViewerUrl)window.open(currentViewerUrl,'_blank','noopener')}
+function closeViewer(){
+ viewer.style.display='none';viewerBody.innerHTML='';
+ // Course remains exactly where the trainee left it (for example Environment · OBSERVE).
+}
+async function downloadViewerOriginal(){
+ if(!currentViewerUrl||!currentViewerMaterial)return;
+ try{
+   const r=await fetch(currentViewerUrl); if(!r.ok)throw new Error('Download failed');
+   const blob=await r.blob(); const u=URL.createObjectURL(blob);
+   const a=document.createElement('a');a.href=u;a.download=currentViewerMaterial.filename||'TIB-course-material';
+   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);
+ }catch(e){window.open(currentViewerUrl,'_blank','noopener')}
+}
 function viewerFullscreen(){if(viewer.requestFullscreen)viewer.requestFullscreen()}
-
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
