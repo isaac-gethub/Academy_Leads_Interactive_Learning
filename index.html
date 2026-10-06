@@ -64,7 +64,7 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
 </style>
 </head>
 <body>
-<header><div><div class="brand">TIB ACADEMY</div><small>INTERACTIVE LEARNING</small></div><div class="spacer"></div><span class="userChip" id="userChip">Not signed in</span><button class="refBtn" onclick="openCourseOverview()">Course Overview</button><button class="refBtn" onclick="openJobMarketAlignment()">Job Market Fit</button><button class="refBtn" onclick="openPreClassWalkthrough()">Pre-Class Walkthrough</button><button class="refBtn" onclick="openCorvaneReference()">Corvane Project Reference</button><button class="refBtn" onclick="openSampleDocumentLibrary()">Sample Documents</button><a class="adminLink" href="content-admin.html">Content Admin</a><a class="adminLink" href="#" onclick="sb.auth.signOut();location.reload();return false">Sign Out</a></header>
+<header><div><div class="brand">TIB ACADEMY</div><small>INTERACTIVE LEARNING</small></div><div class="spacer"></div><span class="userChip" id="userChip">Not signed in</span><button class="refBtn" onclick="openCourseOverview()">Course Overview</button><button class="refBtn" onclick="openJobMarketAlignment()">Job Market Fit</button><button class="refBtn" onclick="openCorvaneReference()">Corvane Project Reference</button><button class="refBtn" onclick="openCorvaneSAP()">Open Corvane SAP</button><button class="refBtn" onclick="openSampleDocumentLibrary()">Sample Documents</button><a class="adminLink" href="content-admin.html">Content Admin</a><a class="adminLink" href="#" onclick="sb.auth.signOut();location.reload();return false">Sign Out</a></header>
 <div class="viewer" id="viewer">
  <div class="viewerHead"><button class="viewerBack" onclick="courseHome()">← Course Home</button><button class="viewerBack" id="libraryBackBtn" onclick="openSampleDocumentLibrary()" style="display:none">← Sample Library</button><b id="viewerTitle">Document Viewer</b><div class="spacer"></div>
  <div class="viewerActions"><button class="viewerBtn" onclick="downloadViewerOriginal()">Download Original</button><button class="viewerBtn" onclick="viewerFullscreen()">Full Screen</button><button class="viewerBtn" onclick="closeViewer()">Close</button></div></div>
@@ -160,7 +160,6 @@ function openStaticHtmlPage(path,title){
  showLibraryBack(false);currentViewerUrl=path;currentViewerMaterial={title,filename:path};viewerTitle.textContent=title;viewerBody.classList.add('htmlPage');viewerBody.innerHTML=`<iframe src="${path}" style="display:block;width:100%;height:100%;border:0;background:#fff" title="${esc(title)}"></iframe>`;document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';viewer.style.display='flex';viewer.classList.add('open');
 }
 function openJobMarketAlignment(){openStaticHtmlPage('job-market-alignment.html','Why This Course Matches the Job');}
-function openPreClassWalkthrough(){showLibraryBack(false);currentViewerUrl='LEARN_TO_LEAD_PreClass_System_Walkthrough.pdf';currentViewerMaterial={title:'Pre-Class System Walkthrough',filename:'LEARN_TO_LEAD_PreClass_System_Walkthrough.pdf'};viewerTitle.textContent='Pre-Class System Walkthrough';renderLocalFile(currentViewerUrl,viewerTitle.textContent);}
 function openCourseOverview(){openStaticHtmlPage('course-overview.html','TIB ILA Course Overview');}
 function openFoundation(){openStaticHtmlPage('foundation.html','FOUNDATION · Controls Theory');}
 function theoryReferenceCards(a){const xs=THEORY_REFS[a.id]||[];if(!xs.length)return '';return `<div style="margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#f8fafc"><b style="color:var(--navy)">Theory Reference</b><div class="docs" style="margin-top:8px">${xs.map(x=>`<div class="doc"><b>${x[0]} — ${x[1]}</b><button class="btn" style="float:right;padding:6px 9px" onclick="openEnhancement('${x[2]}','${x[0]} — ${x[1]}')">Open</button></div>`).join('')}</div></div>`;}
@@ -338,7 +337,18 @@ async function renderLocalFile(path,title){
  }catch(e){viewerBody.innerHTML=`<div class="viewerError"><h2>Sample document could not be opened</h2><p>${esc(e.message||'Unable to open sample.')}</p><p>Select <b>Download Original</b> or return to the course.</p></div>`;}
 }
 
-async function openCorvaneReference(){
+async 
+function openCorvaneSAP(scenario){
+ const sid=scenario||'CORV-SIM-01';
+ const url='tibsap://corvane?scenario='+encodeURIComponent(sid);
+ const box=document.createElement('div');
+ box.style.cssText='position:fixed;inset:0;background:#0008;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
+ box.innerHTML=`<div style="max-width:650px;background:#fff;border-radius:14px;padding:24px;color:#1c2431"><h2 style="color:#122a4a">Open Corvane SAP Simulator</h2><p>TIB ILA will hand this activity to the Windows TIB SAP Training Assistant.</p><p><b>Scenario:</b> ${sid}</p><p><a class="btn" href="${url}" style="display:inline-block;text-decoration:none">OPEN WINDOWS SIMULATOR</a> <button class="btn maroon" id="closeCorvaneHandoff">Cancel</button></p><p class="muted">First use only: extract the Windows trainee package and run REGISTER_TIB_ILA_HANDOFF.bat once. Your browser may ask permission to open TIB SAP Training Assistant.</p></div>`;
+ document.body.appendChild(box);
+ box.querySelector('#closeCorvaneHandoff').onclick=()=>box.remove();
+}
+
+function openCorvaneReference(){
  showLibraryBack(false);
  const filename='corvane-reference.xlsx';
  currentViewerUrl=filename;
