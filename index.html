@@ -75,8 +75,8 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
 <p class="muted">Use your existing TIB Academy trainee account.</p>
 <label>Email</label><input type="email" id="loginEmail" autocomplete="email">
 <label>Password</label><input type="password" id="loginPassword" autocomplete="current-password">
-<button class="btn" onclick="signIn()">Sign In</button>
-<div class="authMsg" id="authMsg"></div>
+<button class="btn" id="signInBtn" type="button" onclick="signIn()">Sign In</button>
+<div class="authMsg" id="authMsg"></div><div style="margin-top:12px;font-size:11px;color:#64748b">Build: 2026-10-07-G6-AUTH-FIX-1</div>
 </div></div><div class="layout">
 <aside class="side"><h4>PROJECT MAP</h4><div class="map"><button id="foundationNav" onclick="openFoundation()"><b>FOUNDATION · Controls Theory</b></button></div><div class="map" id="map"></div></aside>
 <main>
@@ -90,13 +90,25 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
 <script>
 const SUPABASE_URL='https://blfgwysgekfqhcafofhe.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_ThLetpd4hj49fjce-kXoFA_v4ghwIqV';
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const BUILD_VERSION='2026-10-07-G6-AUTH-FIX-1';
+let sb=null;
+function el(id){return document.getElementById(id)}
+function setAuthMessage(msg){const x=el('authMsg'); if(x)x.textContent=msg||'';}
+function initSupabase(){
+ if(!window.supabase || !window.supabase.createClient){
+   setAuthMessage('Login service did not load. Refresh the page once. If this remains, the browser/network is blocking the Supabase library.');
+   return false;
+ }
+ sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ return true;
+}
 const ENROLLMENT_COURSE='TIB-PM-CONTROLS-LEAD';
 const APP_COURSE_ID='pm_to_controls_lead';
 const MATERIALS_BUCKET='academy-materials';
 const SUBMISSIONS_BUCKET='academy-submissions';
 let currentUser=null,data,ai=0,si=0;const stageNames=['SEE','LISTEN','OBSERVE','BUILD','COMPARE','CONNECT'];
 async function init(){
+ if(!initSupabase()) return;
  data=await fetch('course-content.json').then(r=>r.json());
  window.activityMaterialMap=await fetch('activity-material-map.json').then(r=>r.json()).catch(()=>({activity_mapping:{}}));
  window.audioManifest=await fetch('audio-manifest.json').then(r=>r.json()).catch(()=>({activities:{}}));
@@ -104,18 +116,32 @@ async function init(){
  if(session){await enterAcademy(session.user)}
 }
 async function signIn(){
- authMsg.textContent='Signing in…';
- const email=loginEmail.value.trim(),password=loginPassword.value;
- const {data:login,error}=await sb.auth.signInWithPassword({email,password});
- if(error){authMsg.textContent=error.message;return}
- await enterAcademy(login.user);
+ const btn=el('signInBtn');
+ try{
+   setAuthMessage('Signing in…');
+   if(!sb && !initSupabase()) return;
+   const email=(el('loginEmail')?.value||'').trim();
+   const password=el('loginPassword')?.value||'';
+   if(!email||!password){setAuthMessage('Enter both email and password.');return;}
+   if(btn){btn.disabled=true;btn.textContent='Signing in…';}
+   const {data:login,error}=await sb.auth.signInWithPassword({email,password});
+   if(error){setAuthMessage('Sign-in failed: '+error.message);return;}
+   if(!login?.user){setAuthMessage('Sign-in returned no user. Please try again.');return;}
+   setAuthMessage('Signed in. Verifying course access…');
+   await enterAcademy(login.user);
+ }catch(err){
+   console.error('TIB ILA sign-in error',err);
+   setAuthMessage('Login error: '+(err?.message||String(err)));
+ }finally{
+   if(btn){btn.disabled=false;btn.textContent='Sign In';}
+ }
 }
 async function enterAcademy(user){
- currentUser=user;userChip.textContent=user.email||'Signed in';
+ currentUser=user;el('userChip').textContent=user.email||'Signed in';
  const {data:enroll,error}=await sb.from('enrollments').select('course,is_active,start_date,expiry_date').eq('user_id',user.id).eq('course',ENROLLMENT_COURSE).eq('is_active',true).maybeSingle();
- if(error){authMsg.textContent='Unable to verify course access.';return}
- if(!enroll){authMsg.textContent='Your account is valid, but LEARN TO LEAD is not currently assigned to this account.';return}
- authGate.style.display='none';
+ if(error){setAuthMessage('Unable to verify course access: '+error.message);return}
+ if(!enroll){setAuthMessage('Your account is valid, but LEARN TO LEAD is not currently assigned to this account.');return}
+ el('authGate').style.display='none';
  const {data:rows}=await sb.from('academy_progress').select('item_id,status,progress_percent,data').eq('user_id',user.id).eq('app_course_id',APP_COURSE_ID);
  window.remoteProgress=rows||[];
  const resume=(rows||[]).filter(x=>x.data&&x.data.current_project_stage).sort((a,b)=>new Date(b.updated_at)-new Date(a.updated_at))[0];
