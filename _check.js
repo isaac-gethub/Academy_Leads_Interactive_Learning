@@ -1,109 +1,19 @@
-<!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TIB Academy Interactive Learning</title>
-<style>
-:root{--navy:#122a4a;--maroon:#7a263a;--teal:#176b70;--bg:#f3f6f9;--line:#d9e2ea;--muted:#64748b;--good:#21844a}
-*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:#172230}
-header{height:64px;background:var(--navy);color:#fff;display:flex;align-items:center;padding:0 18px;gap:16px}header .brand{font-weight:900}header small{opacity:.7}.spacer{flex:1}
-.adminLink{color:#fff;text-decoration:none;border:1px solid #ffffff55;padding:8px 10px;border-radius:8px;font-size:12px}
-.layout{display:grid;grid-template-columns:220px minmax(0,1fr) 220px;min-height:calc(100vh - 64px)}
-.side{background:#fff;padding:16px;border-right:1px solid var(--line)}.right{border-right:0;border-left:1px solid var(--line)}
-.side h4{font-size:11px;letter-spacing:1px;color:var(--muted);margin:4px 0 12px}
-.map button{display:block;width:100%;text-align:left;border:0;background:transparent;padding:10px;border-radius:8px;margin:2px 0;cursor:pointer;color:#475569}
-.map button.active{background:#eaf2fb;color:var(--navy);font-weight:900}.map button.done{color:var(--good)}
-main{padding:22px;min-width:0}.crumb{font-size:12px;color:var(--muted);margin-bottom:8px}h1{color:var(--navy);margin:0 0 5px}
-.progress{margin:14px 0}.bar{height:7px;background:#e5ebf0;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;background:var(--teal)}
-.stages{display:flex;gap:7px;overflow:auto;margin:18px 0}.stage{white-space:nowrap;border:1px solid var(--line);border-radius:20px;padding:8px 11px;font-size:12px;font-weight:800;background:#fff;cursor:pointer}.stage.active{background:var(--navy);color:#fff;border-color:var(--navy)}
-.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px}.kicker{font-size:11px;letter-spacing:1px;font-weight:900;color:var(--maroon)}h2{color:var(--navy);margin:6px 0 10px}.body{font-size:16px;line-height:1.7}
-.docs{display:grid;gap:8px;margin-top:12px}.doc{border:1px solid var(--line);border-radius:9px;padding:10px;background:#fafcfd}
-.flow{margin-top:16px;background:#eef6f6;border-radius:9px;padding:12px;font-weight:800;color:#155e63}
-.audio{margin-top:14px;padding:13px;background:#f8fafc;border:1px solid var(--line);border-radius:10px}.btn{border:0;background:var(--navy);color:#fff;border-radius:8px;padding:10px 13px;font-weight:800;cursor:pointer}.btn.maroon{background:var(--maroon)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mini{border:1px solid var(--line);border-radius:10px;padding:13px;background:#fafcfd}
-textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;padding:8px;font:inherit}
-.next{margin-top:14px;padding:14px;border-left:4px solid var(--maroon);background:#faf7f8}
-.right .stat{font-size:28px;font-weight:900;color:var(--navy)}.muted{color:var(--muted);font-size:13px}
-.mobileBtns{display:none}
-.refBtn{border:1px solid #ffffff55;background:#176b70;color:#fff;padding:8px 11px;border-radius:8px;cursor:pointer;font-weight:800}
-.refIntro{border:1px solid var(--line);background:#eef6f6;border-radius:10px;padding:10px 12px;margin:10px 0 14px;font-size:13px;color:#155e63}
 
-@media(max-width:900px){.layout{grid-template-columns:1fr}.side{display:none}.mobileBtns{display:flex;gap:7px}.grid2{grid-template-columns:1fr}main{padding:14px}}
 
-.courseHomePanel{max-width:820px;margin:54px auto 0;padding:38px 42px;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:0 10px 30px #102a4310;text-align:center}.courseHomePanel h1{margin:4px 0 6px;color:var(--navy);font-size:34px}.courseHomePanel .subtitle{font-weight:800;color:#566b86;letter-spacing:.02em}.courseHomePanel .path{margin:24px 0 18px;padding:13px;border-radius:10px;background:#eef6f5;color:#0b6766;font-weight:800}.courseHomePanel .homeActions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}.courseHomePanel .homeActions button{border:0;border-radius:10px;padding:12px 18px;font-weight:800;cursor:pointer}.courseHomePanel .primary{background:var(--navy);color:#fff}.courseHomePanel .secondary{background:#e9f4f3;color:#0b6766}.courseHomePanel .resume{margin-top:18px;color:#66768c}.courseHomePanel .ready{font-size:12px;font-weight:800;color:#8b1e35;letter-spacing:.08em}
-</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-#authGate{position:fixed;inset:0;background:#eef2f6;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
-.authCard{width:min(430px,100%);background:#fff;border:1px solid #d9e2ea;border-radius:16px;padding:24px;box-shadow:0 15px 40px #0002}
-.authCard h2{margin-top:0;color:#122a4a}.authCard input{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:8px;margin:5px 0 10px}
-.authMsg{font-size:13px;color:#7a263a;margin-top:10px}.userChip{font-size:12px;background:#ffffff18;padding:7px 9px;border-radius:8px}
 
-.viewer{position:fixed;inset:0;z-index:120;background:#eef2f6;display:none;flex-direction:column}
-.viewerHead{height:58px;background:#122a4a;color:#fff;display:flex;align-items:center;gap:10px;padding:0 14px}
-.viewerHead b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.viewerHead .spacer{flex:1}
-.viewerBody{flex:1;min-height:0;display:block;overflow:auto;overscroll-behavior:contain}.viewerBody.htmlPage{overflow:hidden}
-.viewerFrame{width:100%;height:100%;border:0;background:#fff}
-.viewerFallback{padding:24px;overflow:auto;background:#fff;height:100%}
-.viewerFallback .fileCard{max-width:900px;margin:auto;border:1px solid #d9e2ea;border-radius:14px;padding:22px}
-.viewerActions{display:flex;gap:7px;flex-wrap:wrap}
-.viewerBtn{border:1px solid #ffffff55;background:#ffffff12;color:#fff;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:700}
-.wideHint{font-size:12px;color:#64748b;margin-top:10px}
-@media(max-width:700px){.viewerHead{height:auto;min-height:58px;flex-wrap:wrap;padding:9px}.viewerActions{width:100%;padding-bottom:4px}}
 
-.assessBox{margin-top:16px;border-top:1px solid var(--line);padding-top:16px}
-.answerSaved{font-size:12px;color:var(--good);font-weight:800;margin-top:5px}
-.submissionCard{border:1px solid var(--line);background:#fafcfd;border-radius:10px;padding:12px;margin-top:10px}
-.scoreBadge{display:inline-block;padding:5px 8px;border-radius:12px;background:#eaf2fb;color:var(--navy);font-weight:900;font-size:12px}
 
-.releaseTag{font-size:11px;font-weight:900;letter-spacing:.08em;opacity:.75}
-.notice{border:1px solid #f0d58a;background:#fff9e8;border-radius:10px;padding:10px 12px;margin:10px 0}
-@media(max-width:980px){.layout{grid-template-columns:1fr!important}.left,.right{display:none}.main{min-width:0}}
 
-.courseHomePanel{max-width:820px;margin:54px auto 0;padding:38px 42px;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:0 10px 30px #102a4310;text-align:center}.courseHomePanel h1{margin:4px 0 6px;color:var(--navy);font-size:34px}.courseHomePanel .subtitle{font-weight:800;color:#566b86;letter-spacing:.02em}.courseHomePanel .path{margin:24px 0 18px;padding:13px;border-radius:10px;background:#eef6f5;color:#0b6766;font-weight:800}.courseHomePanel .homeActions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}.courseHomePanel .homeActions button{border:0;border-radius:10px;padding:12px 18px;font-weight:800;cursor:pointer}.courseHomePanel .primary{background:var(--navy);color:#fff}.courseHomePanel .secondary{background:#e9f4f3;color:#0b6766}.courseHomePanel .resume{margin-top:18px;color:#66768c}.courseHomePanel .ready{font-size:12px;font-weight:800;color:#8b1e35;letter-spacing:.08em}
-</style><script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/docx-preview@0.3.6/dist/docx-preview.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>\n
-<style>
-.materialsGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:16px}.fileCard{border:1px solid var(--line);background:#fff;border-radius:12px;padding:14px}.fileCard button{border:0;background:var(--navy);color:#fff;padding:8px 10px;border-radius:8px;font-weight:700;cursor:pointer}
-.xlsxView{min-width:0;padding:12px}.xlsxTabs{display:flex;gap:6px;overflow:auto;position:sticky;top:0;background:#eef2f6;padding:8px 0;z-index:2}.xlsxTabs button{white-space:nowrap;border:1px solid var(--line);background:#fff;padding:7px 9px;border-radius:7px;cursor:pointer}.xlsxTabs button.active{background:var(--navy);color:#fff}.xlsxTableWrap{overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px}.xlsxTableWrap table{border-collapse:collapse;min-width:100%;width:max-content;max-width:none}.xlsxTableWrap td,.xlsxTableWrap th{border:1px solid #d9e2ea;padding:7px;vertical-align:top;white-space:normal;max-width:420px}.docxView,.safeDocx,.docxPreviewHost{width:100%;min-height:100%;overflow:auto;padding:18px}.docxPaper,.safeDocxPaper{max-width:1200px;margin:0 auto;background:#fff;padding:28px;overflow-x:auto}.docxPaper table,.safeDocxPaper table,.docxPreviewHost table{max-width:100%!important;width:100%!important;table-layout:auto!important}.docxPaper td,.docxPaper th,.safeDocxPaper td,.safeDocxPaper th{overflow-wrap:anywhere;word-break:normal}.docx-wrapper{padding:18px!important;background:#eef2f6!important}.docx-wrapper>section.docx{max-width:1200px!important;width:calc(100vw - 48px)!important;min-height:auto!important;margin:0 auto 18px!important;box-shadow:none!important}
-
-.courseHomePanel{max-width:820px;margin:54px auto 0;padding:38px 42px;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:0 10px 30px #102a4310;text-align:center}.courseHomePanel h1{margin:4px 0 6px;color:var(--navy);font-size:34px}.courseHomePanel .subtitle{font-weight:800;color:#566b86;letter-spacing:.02em}.courseHomePanel .path{margin:24px 0 18px;padding:13px;border-radius:10px;background:#eef6f5;color:#0b6766;font-weight:800}.courseHomePanel .homeActions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}.courseHomePanel .homeActions button{border:0;border-radius:10px;padding:12px 18px;font-weight:800;cursor:pointer}.courseHomePanel .primary{background:var(--navy);color:#fff}.courseHomePanel .secondary{background:#e9f4f3;color:#0b6766}.courseHomePanel .resume{margin-top:18px;color:#66768c}.courseHomePanel .ready{font-size:12px;font-weight:800;color:#8b1e35;letter-spacing:.08em}
-</style>
-</head>
-<body>
-<header><div><div class="brand">TIB ACADEMY</div><small>INTERACTIVE LEARNING</small></div><div class="spacer"></div><span class="userChip" id="userChip">Not signed in</span><button class="refBtn" onclick="openCourseOverview()">Course Overview</button><button class="refBtn" onclick="openJobMarketAlignment()">Job Market Fit</button><button class="refBtn" onclick="openCorvaneReference()">Corvane Project Reference</button><button class="refBtn" onclick="openCorvaneSAP()">Open Corvane SAP</button><button class="refBtn" onclick="openSampleDocumentLibrary()">Sample Documents</button><a class="adminLink" href="content-admin.html">Content Admin</a><a class="adminLink" href="#" onclick="sb.auth.signOut();location.reload();return false">Sign Out</a></header>
-<div class="viewer" id="viewer">
- <div class="viewerHead"><button class="viewerBack" onclick="courseHome()">← Course Home</button><button class="viewerBack" id="libraryBackBtn" onclick="openSampleDocumentLibrary()" style="display:none">← Sample Library</button><b id="viewerTitle">Document Viewer</b><div class="spacer"></div>
- <div class="viewerActions"><button class="viewerBtn" onclick="downloadViewerOriginal()">Download Original</button><button class="viewerBtn" onclick="viewerFullscreen()">Full Screen</button><button class="viewerBtn" onclick="closeViewer()">Close</button></div></div>
- <div class="viewerBody" id="viewerBody"></div>
-</div><div id="authGate">
-<div class="authCard">
-<div class="kicker">TIB ACADEMY</div><h2>Interactive Learning Sign In</h2>
-<p class="muted">Use your existing TIB Academy trainee account.</p>
-<label>Email</label><input type="email" id="loginEmail" autocomplete="email">
-<label>Password</label><input type="password" id="loginPassword" autocomplete="current-password">
-<button class="btn" id="signInBtn" type="button" onclick="signIn()">Sign In</button>
-<div class="authMsg" id="authMsg"></div><div style="margin-top:12px;font-size:11px;color:#64748b">Build: 2026-10-07-G6-COURSE-HOME-FIX-7</div>
-</div></div><div class="layout">
-<aside class="side"><h4>PROJECT MAP</h4><div class="map"><button id="foundationNav" onclick="openFoundation()"><b>FOUNDATION · Controls Theory</b></button></div><div class="map" id="map"></div></aside>
-<main>
- <div class="crumb" id="crumb"></div><h1 id="activityTitle"></h1><div class="muted" id="projectStage"></div>
- <div class="progress"><div class="bar"><i id="bar"></i></div><small class="muted" id="progressText"></small></div>
- <div class="stages" id="stages"></div>
- <section class="card" id="content"></section>
-</main>
-<aside class="side right"><h4>MY COURSE</h4><b>LEARN TO LEAD</b><p class="muted" style="margin-top:5px;font-weight:700">SAP CONTROLS TEAM ON A LIVE PROJECT</p><p class="muted">FOUNDATION → BUILD IT → LEAD IT → OWN IT</p><div class="stat" id="pct">0%</div><p class="muted">Current activity</p><b id="current"></b><hr style="border:0;border-top:1px solid var(--line);margin:16px 0"><b>Leadership objective</b><p class="muted">Learn how every core artifact is built, then learn to assign, review, challenge, approve, escalate and govern the team that executes the work.</p></aside>
-</div>
-<script>
 const SUPABASE_URL='https://blfgwysgekfqhcafofhe.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_ThLetpd4hj49fjce-kXoFA_v4ghwIqV';
-const BUILD_VERSION='2026-10-07-G6-COURSE-HOME-FIX-7';
+const BUILD_VERSION='2026-10-07-G6-COURSE-HOME-FIX-5';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 function el(id){return document.getElementById(id)}
 const activityTitle=el('activityTitle'), projectStage=el('projectStage'), crumb=el('crumb'), current=el('current'), bar=el('bar'), progressText=el('progressText'), map=el('map'), stages=el('stages'), viewer=el('viewer'), viewerBody=el('viewerBody'), viewerTitle=el('viewerTitle'), libraryBackBtn=el('libraryBackBtn');
 function setAuthMessage(msg){const x=el('authMsg'); if(x)x.textContent=msg||'';}
 const ENROLLMENT_COURSE='TIB-PM-CONTROLS-LEAD';
 const APP_COURSE_ID='pm_to_controls_lead';
-const BUILD_ID='2026-10-07-G6-COURSE-HOME-7'; console.info('TIB ILA Build:',BUILD_ID);
+const BUILD_ID='2026-10-07-G6-COURSE-HOME-5'; console.info('TIB ILA Build:',BUILD_ID);
 const MATERIALS_BUCKET='academy-materials';
 const SUBMISSIONS_BUCKET='academy-submissions';
 let currentUser=null,data,ai=0,si=0;const stageNames=['SEE','LISTEN','OBSERVE','BUILD','COMPARE','CONNECT'];
@@ -137,30 +47,20 @@ async function enterAcademy(user){
  const {data:enroll,error}=await sb.from('enrollments').select('course,is_active,start_date,expiry_date').eq('user_id',user.id).eq('course',ENROLLMENT_COURSE).eq('is_active',true).maybeSingle();
  if(error){setAuthMessage('Unable to verify course access: '+error.message);return}
  if(!enroll){setAuthMessage('Your account is valid, but LEARN TO LEAD is not currently assigned to this account.');return}
- // Show the application home immediately after enrollment is verified. Optional
- // progress/material/submission queries must never be able to leave a blank home screen.
  el('authGate').style.display='none';
- const savedAi=Number(localStorage.getItem('tib_ila_activity'));
- if(Number.isInteger(savedAi)&&savedAi>=0&&savedAi<data.activities.length)ai=savedAi;
+ const {data:rows}=await sb.from('academy_progress').select('item_id,status,progress_percent,data').eq('user_id',user.id).eq('app_course_id',APP_COURSE_ID);
+ window.remoteProgress=rows||[];
+ const resume=(rows||[]).filter(x=>x.data&&x.data.current_project_stage).sort((a,b)=>new Date(b.updated_at)-new Date(a.updated_at))[0];
+ if(resume){const idx=data.activities.findIndex(x=>x.id===resume.item_id);if(idx>=0){ai=idx;localStorage.setItem('tib_ila_activity',String(ai));}}
+ const {data:mats}=await sb.from('academy_materials').select('id,item_id,category,title,filename,storage_path,material_type,sort_order').eq('app_course_id',APP_COURSE_ID).eq('audience','trainee').eq('is_active',true).order('sort_order');
+ window.courseMaterials=mats||[];
+ const {data:subs}=await sb.from('academy_submissions').select('id,item_id,original_filename,status,score,reviewer_comments,submitted_at').eq('user_id',user.id).eq('app_course_id',APP_COURSE_ID).order('submitted_at',{ascending:false});
+ window.mySubmissions=subs||[];
+ let saved=(rows||[]).find(x=>x.data&&x.data.current_project_stage);
+ if(saved){let x=data.activities.findIndex(a=>a.projectStage===saved.data.current_project_stage);if(x>=0)ai=x}
+ if(!(window.remoteProgress||[]).length){const savedAi=Number(localStorage.getItem('tib_ila_activity'));if(Number.isInteger(savedAi)&&savedAi>=0&&savedAi<data.activities.length)ai=savedAi;}
+ // Intentional Course Home is the application entrance page. It does not alter saved progress.
  showCourseHome();
- // Load optional learner data after the home is already visible.
- try{
-   const {data:rows,error:progressError}=await sb.from('academy_progress').select('item_id,status,progress_percent,data,updated_at').eq('user_id',user.id).eq('app_course_id',APP_COURSE_ID);
-   if(progressError)throw progressError;
-   window.remoteProgress=rows||[];
-   const resume=(rows||[]).filter(x=>x.data&&x.data.current_project_stage).sort((a,b)=>new Date(b.updated_at||0)-new Date(a.updated_at||0))[0];
-   if(resume){let x=data.activities.findIndex(a=>a.projectStage===resume.data.current_project_stage);if(x>=0)ai=x;}
-   localStorage.setItem('tib_ila_activity',String(ai));
-   showCourseHome();
- }catch(e){console.warn('Progress load skipped:',e);window.remoteProgress=[];}
- try{
-   const {data:mats,error:matsError}=await sb.from('academy_materials').select('id,item_id,category,title,filename,storage_path,material_type,sort_order').eq('app_course_id',APP_COURSE_ID).eq('audience','trainee').eq('is_active',true).order('sort_order');
-   if(matsError)throw matsError; window.courseMaterials=mats||[];
- }catch(e){console.warn('Materials load skipped:',e);window.courseMaterials=[];}
- try{
-   const {data:subs,error:subsError}=await sb.from('academy_submissions').select('id,item_id,original_filename,status,score,reviewer_comments,submitted_at').eq('user_id',user.id).eq('app_course_id',APP_COURSE_ID).order('submitted_at',{ascending:false});
-   if(subsError)throw subsError; window.mySubmissions=subs||[];
- }catch(e){console.warn('Submissions load skipped:',e);window.mySubmissions=[];}
 }
 async function saveRemoteProgress(item,status,percent,extra={}){
  if(!currentUser)return;
@@ -529,4 +429,3 @@ async function uploadSubmission(){
 }
 
 init();
-</script></body></html>
