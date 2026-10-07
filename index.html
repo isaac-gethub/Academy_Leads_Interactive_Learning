@@ -82,7 +82,7 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
 <label>Email</label><input type="email" id="loginEmail" autocomplete="email">
 <label>Password</label><input type="password" id="loginPassword" autocomplete="current-password">
 <button class="btn" id="signInBtn" type="button" onclick="signIn()">Sign In</button>
-<div class="authMsg" id="authMsg"></div><div style="margin-top:12px;font-size:11px;color:#64748b">Build: 2026-10-07-G6-STATIC-HOME-8</div>
+<div class="authMsg" id="authMsg"></div><div style="margin-top:12px;font-size:11px;color:#64748b">Build: 2026-10-07-G6-DIRECT-HOME-9</div>
 </div></div><div class="layout">
 <aside class="side"><h4>PROJECT MAP</h4><div class="map"><button id="foundationNav" onclick="openFoundation()"><b>FOUNDATION · Controls Theory</b></button></div><div class="map" id="map"></div></aside>
 <main>
@@ -96,14 +96,14 @@ textarea{width:100%;min-height:75px;border:1px solid #cbd5e1;border-radius:8px;p
 <script>
 const SUPABASE_URL='https://blfgwysgekfqhcafofhe.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_ThLetpd4hj49fjce-kXoFA_v4ghwIqV';
-const BUILD_VERSION='2026-10-07-G6-STATIC-HOME-8';
+const BUILD_VERSION='2026-10-07-G6-DIRECT-HOME-9';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 function el(id){return document.getElementById(id)}
 const activityTitle=el('activityTitle'), projectStage=el('projectStage'), crumb=el('crumb'), current=el('current'), bar=el('bar'), progressText=el('progressText'), map=el('map'), stages=el('stages'), viewer=el('viewer'), viewerBody=el('viewerBody'), viewerTitle=el('viewerTitle'), libraryBackBtn=el('libraryBackBtn');
 function setAuthMessage(msg){const x=el('authMsg'); if(x)x.textContent=msg||'';}
 const ENROLLMENT_COURSE='TIB-PM-CONTROLS-LEAD';
 const APP_COURSE_ID='pm_to_controls_lead';
-const BUILD_ID='2026-10-07-G6-STATIC-HOME-8'; console.info('TIB ILA Build:',BUILD_ID);
+const BUILD_ID='2026-10-07-G6-DIRECT-HOME-9'; console.info('TIB ILA Build:',BUILD_ID);
 const MATERIALS_BUCKET='academy-materials';
 const SUBMISSIONS_BUCKET='academy-submissions';
 let currentUser=null,data,ai=0,si=0;const stageNames=['SEE','LISTEN','OBSERVE','BUILD','COMPARE','CONNECT'];
@@ -142,8 +142,10 @@ async function enterAcademy(user){
  el('authGate').style.display='none';
  const savedAi=Number(localStorage.getItem('tib_ila_activity'));
  if(Number.isInteger(savedAi)&&savedAi>=0&&savedAi<data.activities.length)ai=savedAi;
- openCourseHomePage();
- // Load optional learner data after the home is already visible.
+ const startCourse=new URLSearchParams(window.location.search).get('start')==='1';
+ if(!startCourse){ window.location.replace('course-home.html'); return; }
+ render();
+ // Load optional learner data after the course is already visible.
  try{
    const {data:rows,error:progressError}=await sb.from('academy_progress').select('item_id,status,progress_percent,data,updated_at').eq('user_id',user.id).eq('app_course_id',APP_COURSE_ID);
    if(progressError)throw progressError;
