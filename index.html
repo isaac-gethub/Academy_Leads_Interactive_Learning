@@ -149,7 +149,6 @@ async function enterAcademy(user){
  let saved=(rows||[]).find(x=>x.data&&x.data.current_project_stage);
  if(saved){let x=data.activities.findIndex(a=>a.projectStage===saved.data.current_project_stage);if(x>=0)ai=x}
  if(!(window.remoteProgress||[]).length){const savedAi=Number(localStorage.getItem('tib_ila_activity'));if(Number.isInteger(savedAi)&&savedAi>=0&&savedAi<data.activities.length)ai=savedAi;}
- render();
  // Intentional Course Home is the application entrance page. It does not alter saved progress.
  showCourseHome();
 }
@@ -171,10 +170,12 @@ function showCourseHome(){
 
 function render(){
  const a=data.activities[ai], pct=Math.round((ai/data.activities.length)*100);
- activityTitle.textContent=a.title;projectStage.textContent=a.projectStage;crumb.textContent='My Courses / '+data.course.title+' / '+a.projectStage;
- current.textContent=a.projectStage+' · '+stageNames[si];document.getElementById('pct').textContent=pct+'%';bar.style.width=pct+'%';progressText.textContent='Course progress · '+pct+'%';
- map.innerHTML='';data.activities.forEach((x,i)=>{let b=document.createElement('button');b.textContent=(i<ai?'✓ ':'')+x.projectStage;b.className=i===ai?'active':(i<ai?'done':'');b.onclick=()=>{ai=i;si=0;render()};map.appendChild(b)});
- stages.innerHTML='';stageNames.forEach((x,i)=>{let b=document.createElement('button');b.className='stage '+(i===si?'active':'');b.textContent=x;b.onclick=()=>{si=i;render()};stages.appendChild(b)});
+ const activityTitleEl=el('activityTitle'), projectStageEl=el('projectStage'), crumbEl=el('crumb'), currentEl=el('current');
+ const pctEl=el('pct'), barEl=el('bar'), progressTextEl=el('progressText'), mapEl=el('map'), stagesEl=el('stages');
+ activityTitleEl.textContent=a.title;projectStageEl.textContent=a.projectStage;crumbEl.textContent='My Courses / '+data.course.title+' / '+a.projectStage;
+ currentEl.textContent=a.projectStage+' · '+stageNames[si];pctEl.textContent=pct+'%';barEl.style.width=pct+'%';progressTextEl.textContent='Course progress · '+pct+'%';
+ mapEl.innerHTML='';data.activities.forEach((x,i)=>{let b=document.createElement('button');b.textContent=(i<ai?'✓ ':'')+x.projectStage;b.className=i===ai?'active':(i<ai?'done':'');b.onclick=()=>{ai=i;si=0;render()};mapEl.appendChild(b)});
+ stagesEl.innerHTML='';stageNames.forEach((x,i)=>{let b=document.createElement('button');b.className='stage '+(i===si?'active':'');b.textContent=x;b.onclick=()=>{si=i;render()};stagesEl.appendChild(b)});
  renderStage(a);
 }
 function missing(a,what){return `<div class="kicker">${stageNames[si]}</div><h2>${a.projectStage}</h2><p class="body">This activity is ready in the reusable learning engine. ${what} has not yet been populated in the course-content model.</p><div class="flow">Content Admin → add approved content → the trainee player loads it here automatically.</div>`}
